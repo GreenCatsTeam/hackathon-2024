@@ -1,0 +1,21 @@
+app:
+
+spring:
+  application:
+    name: hackathon
+  liquibase:
+    enabled: true
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-plain.xml
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
