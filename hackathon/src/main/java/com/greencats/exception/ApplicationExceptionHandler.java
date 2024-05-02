@@ -1,7 +1,7 @@
 package com.greencats.exception;
 
-import java.util.Arrays;
 import com.greencats.dto.response.ApiErrorResponse;
+import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
