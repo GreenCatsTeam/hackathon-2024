@@ -13,30 +13,37 @@ import org.springframework.stereotype.Component;
 @Component
 public class JWTUtil {
 
+    public static final String USER_DETAILS = "User details";
+
+    public static final String EMAIL = "email";
+
+    public static final String TEAM_AND_PROJECT = "com.greencats.hackhathon";
+
     @Value("${secrets.jwt_secret}")
     private String secret;
 
+    @SuppressWarnings("MagicNumber")
     public String generateToken(Long id, String email, String password) {
         Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
 
         return JWT.create()
-            .withSubject("User details")
+            .withSubject(USER_DETAILS)
             .withClaim("id", id)
-            .withClaim("email", email)
+            .withClaim(EMAIL, email)
             .withClaim("password", password)
             .withIssuedAt(new Date())
-            .withIssuer("com.greencats.hackhathon")
+            .withIssuer(TEAM_AND_PROJECT)
             .withExpiresAt(expirationDate)
             .sign(Algorithm.HMAC256(secret));
     }
 
     public String validateTokenAndRetrieveClaim(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
-            .withSubject("User details")
-            .withIssuer("com.greencats.hackhathon")
+            .withSubject(USER_DETAILS)
+            .withIssuer(TEAM_AND_PROJECT)
             .build();
 
         DecodedJWT jwt = verifier.verify(token);
-        return jwt.getClaim("email").asString(); // ?? more fields?? ??
+        return jwt.getClaim(EMAIL).asString(); // ?? more fields?? ??
     }
 }

@@ -23,6 +23,7 @@ public class JWTFilter extends OncePerRequestFilter {
     private final UserDetailsService userDetailsService;
 
     @Override
+    @SuppressWarnings("MagicNumber")
     protected void doFilterInternal(
         HttpServletRequest httpServletRequest,
         HttpServletResponse httpServletResponse,

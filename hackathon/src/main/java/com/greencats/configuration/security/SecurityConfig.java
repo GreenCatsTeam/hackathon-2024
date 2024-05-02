@@ -25,14 +25,10 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
                 auth -> auth
                     .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registration").permitAll()
-//                auth.requestMatchers(HttpMethod.POST, "/users").permitAll();
                     .anyRequest().authenticated())
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-//            .oauth2Login(Customizer.withDefaults())
-//            .formLogin(Customizer.withDefaults())
             .userDetailsService(userDetailsService)
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//            .httpBasic(Customizer.withDefaults());
 
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

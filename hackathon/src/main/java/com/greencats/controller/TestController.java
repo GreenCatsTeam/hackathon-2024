@@ -15,6 +15,7 @@ public class TestController {
         method = RequestMethod.GET,
         produces = { "application/json" }
     )
+    @SuppressWarnings("MagicNumber")
     ResponseEntity<IdResponse> usersIdDelete() {
         IdResponse idResponse = new IdResponse();
         idResponse.setId(22L);
