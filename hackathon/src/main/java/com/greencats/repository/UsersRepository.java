@@ -1,10 +1,10 @@
 package com.greencats.repository;
 
-import java.util.Optional;
 import com.greencats.dto.user.UserCreateInfo;
 import com.greencats.dto.user.UserEditInfo;
 import com.greencats.dto.user.UserInfo;
 import com.greencats.exception.UserAlreadyExistException;
+import java.util.Optional;
 
 public interface UsersRepository {
 

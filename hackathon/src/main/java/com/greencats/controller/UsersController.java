@@ -4,9 +4,9 @@ import com.greencats.hackathon.api.UsersApi;
 import com.greencats.hackathon.model.CreateUserRequest;
 import com.greencats.hackathon.model.EditUserRequest;
 import com.greencats.hackathon.model.IdResponse;
+import com.greencats.service.UsersService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import com.greencats.service.UsersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 

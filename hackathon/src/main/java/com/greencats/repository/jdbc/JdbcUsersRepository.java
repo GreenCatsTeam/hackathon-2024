@@ -1,13 +1,13 @@
 package com.greencats.repository.jdbc;
 
-import java.util.Optional;
-import com.greencats.exception.UserNotFoundException;
-import lombok.RequiredArgsConstructor;
 import com.greencats.dto.user.UserCreateInfo;
 import com.greencats.dto.user.UserEditInfo;
 import com.greencats.dto.user.UserInfo;
 import com.greencats.exception.UserAlreadyExistException;
+import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.UsersRepository;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +18,8 @@ public class JdbcUsersRepository implements UsersRepository {
     private final JdbcClient client;
 
     private static final String EMAIL_FIELD = "email";
+
+    private static final String PASSWORD_FIELD = "password";
 
     @Override
     public Long usersIdDelete(Long id) {
@@ -35,8 +37,8 @@ public class JdbcUsersRepository implements UsersRepository {
     @Override
     public Long usersIdPut(Long id, UserEditInfo userEditInfo) {
         int affectedRows = client.sql("UPDATE users SET email = :email, password = :password WHERE user_id = :id")
-            .param("email", userEditInfo.email())
-            .param("password", userEditInfo.password())
+            .param(EMAIL_FIELD, userEditInfo.email())
+            .param(PASSWORD_FIELD, userEditInfo.password())
             .param("id", id)
             .update();
 
@@ -51,7 +53,7 @@ public class JdbcUsersRepository implements UsersRepository {
     public Long usersPost(UserCreateInfo userCreateInfo) throws UserAlreadyExistException {
         return client.sql("INSERT INTO users (email, password) VALUES(:email, :password) RETURNING user_id")
             .param(EMAIL_FIELD, userCreateInfo.email())
-            .param("password", userCreateInfo.password())
+            .param(PASSWORD_FIELD, userCreateInfo.password())
             .query(Long.class)
             .optional().orElseThrow(UserAlreadyExistException::new);
     }
