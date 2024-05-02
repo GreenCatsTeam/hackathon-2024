@@ -1,9 +1,7 @@
 package com.greencats.repository.jdbc;
 
-import com.greencats.dto.user.UserCreateInfo;
+import com.greencats.dto.authorization.AuthUserInfo;
 import com.greencats.dto.user.UserEditInfo;
-import com.greencats.dto.user.UserInfo;
-import com.greencats.exception.UserAlreadyExistException;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.UsersRepository;
 import java.util.Optional;
@@ -28,7 +26,7 @@ public class JdbcUsersRepository implements UsersRepository {
             .update();
 
         if (affectedRows == 0) {
-            throw new UserNotFoundException(id);
+            throw new UserNotFoundException();
         }
 
         return id;
@@ -43,26 +41,20 @@ public class JdbcUsersRepository implements UsersRepository {
             .update();
 
         if (affectedRows == 0) {
-            throw new UserNotFoundException(id);
+            throw new UserNotFoundException();
         }
 
         return id;
     }
 
     @Override
-    public Long usersPost(UserCreateInfo userCreateInfo) throws UserAlreadyExistException {
-        return client.sql("INSERT INTO users (email, password) VALUES(:email, :password) RETURNING user_id")
-            .param(EMAIL_FIELD, userCreateInfo.email())
-            .param(PASSWORD_FIELD, userCreateInfo.password())
-            .query(Long.class)
-            .optional().orElseThrow(UserAlreadyExistException::new);
-    }
-
-    @Override
-    public Optional<UserInfo> findByEmail(String email) {
+    public Optional<AuthUserInfo> findByEmail(String email) {
         return client.sql("SELECT email, password FROM users WHERE email = :email")
             .param(EMAIL_FIELD, email)
-            .query(UserInfo.class)
+            .query(AuthUserInfo.class)
             .optional();
     }
+
+
+
 }

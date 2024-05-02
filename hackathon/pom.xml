@@ -237,7 +237,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapi/hackathon-swagger1.0.0.yaml
+                                ${project.basedir}/src/main/resources/openapi/hackathon-openapi-1.0.1.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>com.greencats.hackathon.api</apiPackage>
