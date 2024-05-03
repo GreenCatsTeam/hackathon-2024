@@ -1,7 +1,6 @@
 --liquibase formatted sql
 
 --changeset hackathon:1
-
 CREATE TABLE Users (
     user_id BIGSERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
