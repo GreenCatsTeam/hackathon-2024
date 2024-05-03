@@ -15,13 +15,11 @@ public class JdbcCardRepository implements CardRepository {
 
     private static final String COMPLEXITY_FIELD = "complexity";
 
-
-
     @Override
     public Long createCard(CardCreateInfo cardCreateInfo) {
         boolean cardExists = false; //TODO: Add check for cards in defined area
 
-        return client.sql("INSERT INTO Card(complexity, comment, photo, latitude, longtitude, points, city_id)" +
+        Long cardId = client.sql("INSERT INTO Card(complexity, comment, photo, latitude, longtitude, points, city_id)" +
             "VALUES(:complexity, :comment, :photo, :latitude, :longtitude, :points, :city_id) RETURNING card_id")
             .param("complexity", cardCreateInfo.complexity())
             .param("comment", cardCreateInfo.comment())
@@ -32,6 +30,9 @@ public class JdbcCardRepository implements CardRepository {
             .param("city_id", cardCreateInfo.city_id())
             .query(Long.class)
             .optional().orElseThrow(() -> new RuntimeException("Failed to create card for unknown reason"));
+
+        client.sql("INSERT INTO cleaning(card_id, status_id, user_id, time) VALUES (:card_id, :status_id, :user_id, :time")
+            .params("card_id", cardId, "status_id", 0, "user_id", cardCreateInfo.)
     }
 
     @Override
