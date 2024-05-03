@@ -2,6 +2,17 @@
 
 --changeset hackathon:1
 
+CREATE TABLE District (
+  district_id BIGSERIAL PRIMARY KEY,
+  district_name varchar(255)
+);
+
+CREATE TABLE City (
+  city_id BIGSERIAL PRIMARY KEY,
+  city_name varchar(255) NOT NULL,
+  district_id INT REFERENCES District(district_id)
+);
+
 CREATE TABLE Users (
     user_id BIGSERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
@@ -21,7 +32,7 @@ CREATE TABLE Status (
 
 CREATE TABLE Card (
     card_id BIGSERIAL PRIMARY KEY,
-    complexity INT ,
+    complexity INT,
     comment VARCHAR(255),
     photo TEXT,
     latitude DOUBLE PRECISION,
@@ -37,17 +48,6 @@ CREATE TABLE Cleaning (
     user_id INT REFERENCES Users(user_id) NULL,
     time TIMESTAMP
 );
-
-CREATE TABLE City (
-    city_id BIGSERIAL PRIMARY KEY,
-    city_name varchar(255) NOT NULL,
-    district_id INT REFERENCES District(district_id)
-);
-
-CREATE TABLE District (
-    district_id BIGSERIAL PRIMARY KEY,
-    district_name varchar(255)
-)
 
 -- Заполнение таблицы статусов
 INSERT INTO Status (status_name) VALUES

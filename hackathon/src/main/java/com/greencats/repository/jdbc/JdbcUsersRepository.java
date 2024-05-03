@@ -54,7 +54,4 @@ public class JdbcUsersRepository implements UsersRepository {
             .query(AuthUserInfo.class)
             .optional();
     }
-
-
-
 }
