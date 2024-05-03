@@ -20,9 +20,7 @@ CREATE TABLE Users (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(100) NOT NULL,
     role VARCHAR(20) NOT NULL,
-    organization VARCHAR(255) NULL,
-    city_id INT REFERENCES City(city_id),
-    is_banned BOOLEAN DEFAULT FALSE
+    organization VARCHAR(255) NULL
 );
 
 CREATE TABLE Status (
@@ -32,13 +30,13 @@ CREATE TABLE Status (
 
 CREATE TABLE Card (
     card_id BIGSERIAL PRIMARY KEY,
-    complexity INT,
+    complexity INT ,
     comment VARCHAR(255),
     photo TEXT,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     points INT,
-    city_id INT REFERENCES City(city_id)
+    status_id INT REFERENCES Status(status_id)
 );
 
 CREATE TABLE Cleaning (

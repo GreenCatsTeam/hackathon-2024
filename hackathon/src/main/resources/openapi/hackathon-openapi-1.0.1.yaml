@@ -50,9 +50,83 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       security:
         - basicAuth: [ ]
+    put:
+      operationId: changeCardComplexity
+      tags:
+        - cards
+      summary: Изменить сложность карточки
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComplexityChangeRequest'
+        required: true
+      responses:
+        "200":
+          description: Карточка изменена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+    delete:
+      operationId: deleteCard
+      tags:
+        - cards
+      summary: Удалить карточку
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Карточка успешна удалена
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
   /cards/:
     post:
-      operationId: postCard
+      operationId: createCard
       tags:
         - cards
       summary: Создать карточку
@@ -76,13 +150,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
         "404":
-          description: Карточка с указанным ID не найден
+          description: Карточка с указанным ID не найдена
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
       security:
         - basicAuth: [ ]
+    get:
+      tags:
+        - cards
+      operationId: getListCards
+      summary: Получить список карточек
+      description: Возвращает список карточек со смещением offset и количеством limit
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 30
+            minimum: 1
+            maximum: 100
+          description: Количество возвращаемых карточек
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Смещение по количеству карточек
+      responses:
+        '200':
+          description: Получен смещенный список карточек
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardListInfo'
   /admin/users:
     get:
       tags:
@@ -284,6 +389,37 @@ components:
           type: integer
           description: Id района
           format: int32
+    CardListInfo:
+      type: object
+      properties:
+        cardId:
+          type: integer
+          description: Id карточки
+          format: int64
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
+        cityId:
+          type: integer
+          description: ID города
+          format: int32
+        districtId:
+          type: integer
+          description: ID района
+          format: int32
     UserInfoForAdminPanel:
       type: object
       properties:
@@ -317,6 +453,10 @@ components:
     CardRequest:
       type: object
       properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
         complexity:
           type: integer
           description: Сложность уборки
@@ -336,8 +476,10 @@ components:
           type: number
           description: Ширина
           format: double
-        status:
-          $ref: '#/components/schemas/Status'
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
         cityId:
           type: integer
           description: ID города
@@ -349,6 +491,10 @@ components:
     CardResponse:
       type: object
       properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
         cardId:
           type: integer
           description: ID карты
@@ -375,8 +521,10 @@ components:
           type: integer
           description: Вознаграждения
           format: int32
-        status:
-          $ref: '#/components/schemas/Status'
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
         cityId:
           type: integer
           description: ID города
@@ -385,16 +533,13 @@ components:
           type: integer
           description: ID района
           format: int32
-    Status:
+    ComplexityChangeRequest:
       type: object
       properties:
-        statusId:
+        complexity:
           type: integer
-          description: ID статуса
-          format: int64
-        statusName:
-          type: string
-          description: Название статуса
+          description: Сложность уборки
+          format: int32
     AuthorizeUserRequest:
       type: object
       properties:
