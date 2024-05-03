@@ -15,8 +15,6 @@ public class JdbcCardRepository implements CardRepository {
 
     private static final String COMPLEXITY_FIELD = "complexity";
 
-
-
     @Override
     public Long createCard(CardCreateInfo cardCreateInfo) {
         boolean cardExists = false; //TODO: Add check for cards in defined area
@@ -44,6 +42,8 @@ public class JdbcCardRepository implements CardRepository {
         if (updatedRows == 0) {
             throw new UserNotFoundException();
         }
+
+        return null;
     }
 
 

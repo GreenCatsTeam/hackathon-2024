@@ -1,6 +1,6 @@
 package com.greencats.dto.card;
 
-public record CardCreateInfo (
+public record CardCreateInfo(
     Integer complexity,
     String comment,
     String photo,

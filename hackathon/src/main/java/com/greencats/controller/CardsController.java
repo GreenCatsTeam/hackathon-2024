@@ -5,6 +5,7 @@ import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.ComplexityChangeRequest;
+import com.greencats.hackathon.model.IdResponse;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class CardsController implements CardsApi {
     }
 
     @Override
-    public ResponseEntity<CardResponse> createCard(CardRequest cardRequest) {
+    public ResponseEntity<IdResponse> createCard(CardRequest cardRequest) {
         return CardsApi.super.createCard(cardRequest);
     }
 

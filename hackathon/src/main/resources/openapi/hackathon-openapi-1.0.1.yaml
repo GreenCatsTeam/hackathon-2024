@@ -142,7 +142,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CardResponse'
+                $ref: '#/components/schemas/IdResponse'
         "400":
           description: Некорректные параметры запроса
           content:
@@ -466,7 +466,6 @@ components:
           description: Комментарий
         photo:
           type: string
-          format: byte
           description: Фотка в виде массива байт, закодированного в base64
         longitude:
           type: number
