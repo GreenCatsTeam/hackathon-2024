@@ -4,6 +4,7 @@ import com.greencats.dto.authorization.AuthUserInfo;
 import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
 import com.greencats.dto.card.CardInfo;
+import com.greencats.exception.CardNotFoundException;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,11 +53,16 @@ public class JdbcCardRepository implements CardRepository {
     }
 
     @Override
-    public Optional<CardInfo> getCard(Long id) {
+    public Long deleteCard(Long id) {
+        return 0;
+    }
+
+    @Override
+    public CardInfo getCard(Long id) {
         return client.sql("SELECT complexity, comment, photo, latitude, longtitude, points, city_id FROM Card WHERE card_id = :id")
             .param("card_id", id)
             .query(CardInfo.class)
-            .optional();
+            .optional().orElseThrow(CardNotFoundException::new);
     }
 
 }

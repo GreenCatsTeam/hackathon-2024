@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface CardRepository {
     Long createCard(CardCreateInfo cardCreateInfo);
     Long updateCard(CardEditInfo cardEditInfo);
-    Optional<CardInfo> getCard(Long id);
+    Long deleteCard(Long id);
+    CardInfo getCard(Long id);
 }
