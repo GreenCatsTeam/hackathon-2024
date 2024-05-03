@@ -10,7 +10,8 @@ CREATE TABLE Users (
     password VARCHAR(100) NOT NULL,
     role VARCHAR(20) NOT NULL,
     organization VARCHAR(255) NULL,
-    city_id INT REFERENCES City(city_id)
+    city_id INT REFERENCES City(city_id),
+    is_banned BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Status (
@@ -39,9 +40,15 @@ CREATE TABLE Cleaning (
 );
 
 CREATE TABLE City (
-  city_id BIGSERIAL PRIMARY KEY,
-  name varchar(255) NOT NULL
+    city_id BIGSERIAL PRIMARY KEY,
+    city_name varchar(255) NOT NULL,
+    district_id INT REFERENCES District(district_id)
 );
+
+CREATE TABLE District (
+    district_id BIGSERIAL PRIMARY KEY,
+    district_name varchar(255)
+)
 
 -- Заполнение таблицы статусов
 INSERT INTO Status (status_name) VALUES
