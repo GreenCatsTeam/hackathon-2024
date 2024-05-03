@@ -15,6 +15,8 @@ public class JdbcCardRepository implements CardRepository {
 
     private static final String COMPLEXITY_FIELD = "complexity";
 
+
+
     @Override
     public Long createCard(CardCreateInfo cardCreateInfo) {
         boolean cardExists = false; //TODO: Add check for cards in defined area
@@ -43,9 +45,20 @@ public class JdbcCardRepository implements CardRepository {
             throw new UserNotFoundException();
         }
 
-        return null;
+        return cardEditInfo.card_id();
     }
 
+    @Override
+    public Long deleteCard(Long id) {
+        return 0;
+    }
 
+    @Override
+    public CardInfo getCard(Long id) {
+        return client.sql("SELECT complexity, comment, photo, latitude, longtitude, points, city_id FROM Card WHERE card_id = :id")
+            .param("card_id", id)
+            .query(CardInfo.class)
+            .optional().orElseThrow(CardNotFoundException::new);
+    }
 
 }
