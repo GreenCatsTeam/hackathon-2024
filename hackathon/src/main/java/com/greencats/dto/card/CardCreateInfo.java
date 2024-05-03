@@ -1,12 +1,15 @@
 package com.greencats.dto.card;
 
-public record CardCreateInfo(
+public record CardCreateInfo (
+    Long userId,
     Integer complexity,
     String comment,
     String photo,
-    Double latitude,
     Double longitude,
+    Double latitude,
+    Long statusId,
     Integer points,
-    Integer city_id
+    Long cityId,
+    Long districtId
 ) {
 }

@@ -34,12 +34,12 @@ public class JdbcCardsService implements CardsService {
         for (ShortCardInfo cardInfo : shortCardInfos) {
             CardListInfo cardListInfo = new CardListInfo();
             cardListInfo.setCardId(cardInfo.cardId());
-            cardListInfo.setCardId(cardInfo.complexity());
-            cardListInfo.setCardId(cardInfo.longitude());
-            cardListInfo.setCardId(cardInfo.latitude());
-            cardListInfo.setCardId(cardInfo.statusId());
-            cardListInfo.setCardId(cardInfo.cityId());
-            cardListInfo.setCardId(cardInfo.districtId());
+            cardListInfo.setComplexity(cardInfo.complexity());
+            cardListInfo.setLongitude(cardInfo.longitude());
+            cardListInfo.setLatitude(cardInfo.latitude());
+            cardListInfo.setStatusId(cardInfo.statusId());
+            cardListInfo.setCityId(cardInfo.cityId());
+            cardListInfo.setDistrictId(cardInfo.districtId());
         }
 
         return new ResponseEntity<>(cardListInfos, HttpStatus.OK);
@@ -65,6 +65,7 @@ public class JdbcCardsService implements CardsService {
             cardRequest.getPhoto(),
             cardRequest.getLatitude(),
             cardRequest.getLongitude(),
+            cardRequest.getStatusId(), // id status - created
             cardRequest.getComplexity() * 2, // points magic math
             cardRequest.getCityId(),
             cardRequest.getDistrictId()
@@ -88,17 +89,18 @@ public class JdbcCardsService implements CardsService {
     public ResponseEntity<CardResponse> getCard(Long id) {
         CardInfo cardInfo = cardRepository.getCard(id);
 
-        CardResponse cardResponse = new CardResponse(
-            cardInfo.cardId(),
-            cardInfo.UserId(),
-            cardInfo.complexity(),
-            cardInfo.comment(),
-            cardInfo.photo(),
-            cardInfo.latitude(),
-            cardInfo.longitude(),
-            cardInfo.points(),
-            cardInfo.cityId()
-        );
+        CardResponse cardResponse = new CardResponse();
+        cardResponse.setCardId(cardInfo.cardId());
+        cardResponse.setUserId(cardInfo.userId());
+        cardResponse.setComplexity(cardInfo.complexity());
+        cardResponse.setComment(cardInfo.comment());
+        cardResponse.setPhoto(cardInfo.photo());
+        cardResponse.setLatitude(cardInfo.latitude());
+        cardResponse.setLongitude(cardInfo.longitude());
+        cardResponse.setPoints(cardInfo.points());
+        cardResponse.setStatusId(cardInfo.statusId());
+        cardResponse.setCityId(cardInfo.cityId());
+        cardResponse.setDistrictId(cardInfo.districtId());
         return new ResponseEntity<>(cardResponse, HttpStatus.OK);
     }
 }

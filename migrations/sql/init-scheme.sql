@@ -1,7 +1,6 @@
 --liquibase formatted sql
 
 --changeset hackathon:1
-
 CREATE TABLE District (
   district_id BIGSERIAL PRIMARY KEY,
   district_name varchar(255)
@@ -14,7 +13,13 @@ CREATE TABLE City (
 
 CREATE TABLE Users (
     user_id BIGSERIAL PRIMARY KEY,
-    role VARCHAR(20) NOT NULL
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    organization VARCHAR(255) NULL,
+    is_banned BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Status (
@@ -32,7 +37,8 @@ CREATE TABLE Card (
     points INT,
     status_id INT REFERENCES Status(status_id),
     city_id INT REFERENCES City(city_id),
-    district_id INT REFERENCES District(district_id)
+    district_id INT REFERENCES District(district_id),
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Cleaning (
