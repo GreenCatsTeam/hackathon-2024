@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Hackathon API
   description: "API для "
-  version: 1.0.0
+  version: 1.0.1
 servers:
   - url: https://greencats.com/
 tags:
@@ -10,7 +10,110 @@ tags:
     description: Работа с пользователями
   - name: authorization
     description: Авторизация
+  - name: cards
+    description: Карточка
 paths:
+  /cards/{id}:
+    get:
+      operationId: getCard
+      tags:
+        - cards
+      summary: Получить карточку
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Карточка получена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+  /cards/:
+    post:
+      operationId: postCard
+      tags:
+        - cards
+      summary: Создать карточку
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardRequest'
+        required: true
+      responses:
+        "200":
+          description: Карточка получена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+  /admin/users:
+    get:
+      tags:
+        - users
+      summary: Получить список пользователей
+      description: Возвращает список пользователей со смещением offset и количеством limit
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+          description: Количество возвращаемых пользователей
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Смещение по количеству пользователей
+      responses:
+        '200':
+          description: Получен смещенный список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserInfoForAdminPanel'
   /auth/registration:
     post:
       operationId: performRegistration
@@ -155,12 +258,143 @@ components:
     RegisterUserRequest:
       type: object
       properties:
+        firstName:
+          type: string
+          description: Имя
+        lastName:
+          type: string
+          description: Фамилия
         email:
           type: string
           description: Email
         password:
           type: string
           description: Пароль пользователя
+        role:
+          type: string
+          description: Роль пользователя
+        organization:
+          type: string
+          description: Организация
+        cityId:
+          type: integer
+          description: Id города
+          format: int32
+        districtId:
+          type: integer
+          description: Id района
+          format: int32
+    UserInfoForAdminPanel:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
+        firstName:
+          type: string
+          description: Имя
+        lastName:
+          type: string
+          description: Фамилия
+        email:
+          type: string
+          description: Email
+        role:
+          type: string
+          description: Роль пользователя
+        cityId:
+          type: integer
+          description: Id города
+          format: int32
+        districtId:
+          type: integer
+          description: Id района
+          format: int32
+        isBanned:
+          type: boolean
+          description: Забанен ли пользователь
+    CardRequest:
+      type: object
+      properties:
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        comment:
+          type: string
+          description: Комментарий
+        photo:
+          type: string
+          format: byte
+          description: Фотка в виде массива байт, закодированного в base64
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        status:
+          $ref: '#/components/schemas/Status'
+        cityId:
+          type: integer
+          description: ID города
+          format: int32
+        districtId:
+          type: integer
+          description: ID района
+          format: int32
+    CardResponse:
+      type: object
+      properties:
+        cardId:
+          type: integer
+          description: ID карты
+          format: int64
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        comment:
+          type: string
+          description: Комментарий
+        photo:
+          type: string
+          description: Ссылка на фотографию
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        points:
+          type: integer
+          description: Вознаграждения
+          format: int32
+        status:
+          $ref: '#/components/schemas/Status'
+        cityId:
+          type: integer
+          description: ID города
+          format: int32
+        districtId:
+          type: integer
+          description: ID района
+          format: int32
+    Status:
+      type: object
+      properties:
+        statusId:
+          type: integer
+          description: ID статуса
+          format: int64
+        statusName:
+          type: string
+          description: Название статуса
     AuthorizeUserRequest:
       type: object
       properties:
