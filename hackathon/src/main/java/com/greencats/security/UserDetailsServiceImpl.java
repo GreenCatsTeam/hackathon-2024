@@ -1,6 +1,7 @@
 package com.greencats.security;
 
 import com.greencats.dto.authorization.AuthUserInfo;
+import com.greencats.dto.security.UserCredentials;
 import com.greencats.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -22,14 +23,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
 
-        AuthUserInfo authUserInfo =
-            usersRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        UserCredentials authUserInfo = usersRepository.findByEmail(username);
 
         List<String> roles = new ArrayList<>();
         roles.add("USER"); // базовая роль
-//        if (authUserInfo.isAdmin()) { // предполагаем, что есть метод isAdmin() в вашей модели данных
-//            roles.add("ADMIN");
-//        }
+        if (authUserInfo.isAdmin()) { // предполагаем, что есть метод isAdmin() в вашей модели данных
+            roles.add("ADMIN");
+        }
 
         return User
             .withUsername(authUserInfo.email())

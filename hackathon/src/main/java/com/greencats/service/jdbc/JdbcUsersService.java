@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class JdbcUsersService implements UsersService {
     private final UsersRepository usersRepository;
 
     @Override
+    @Transactional
     public ResponseEntity<IdResponse> usersIdDelete(Long id) {
         IdResponse idResponse = new IdResponse();
         idResponse.setId(usersRepository.usersIdDelete(id));
@@ -25,6 +27,7 @@ public class JdbcUsersService implements UsersService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdResponse> usersIdPut(Long id, EditUserRequest editUserRequest) {
         IdResponse idResponse = new IdResponse();
         idResponse.setId(usersRepository.usersIdPut(

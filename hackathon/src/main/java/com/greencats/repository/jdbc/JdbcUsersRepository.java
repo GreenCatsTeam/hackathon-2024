@@ -1,6 +1,7 @@
 package com.greencats.repository.jdbc;
 
 import com.greencats.dto.authorization.AuthUserInfo;
+import com.greencats.dto.security.UserCredentials;
 import com.greencats.dto.user.UserEditInfo;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.UsersRepository;
@@ -48,10 +49,10 @@ public class JdbcUsersRepository implements UsersRepository {
     }
 
     @Override
-    public Optional<AuthUserInfo> findByEmail(String email) {
-        return client.sql("SELECT email, password FROM users WHERE email = :email")
+    public UserCredentials findByEmail(String email) {
+        return client.sql("SELECT email, password, role FROM users WHERE email = :email")
             .param(EMAIL_FIELD, email)
-            .query(AuthUserInfo.class)
-            .optional();
+            .query(UserCredentials.class)
+            .optional().orElseThrow(UserNotFoundException::new);
     }
 }

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Hackathon API
   description: "API для "
-  version: 1.0.1
+  version: 1.1.0
 servers:
   - url: https://greencats.com/
 tags:
@@ -219,6 +219,39 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserInfoForAdminPanel'
+  /admin/users/{id}:
+    post:
+      operationId: banUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID пользователя
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      tags:
+        - admin
+      summary: Забанить пользователя
+      responses:
+        "200":
+          description: Пользователь успешно забанен
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Пользователь с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
   /auth/registration:
     post:
       operationId: performRegistration
@@ -415,11 +448,11 @@ components:
         cityId:
           type: integer
           description: ID города
-          format: int32
+          format: int64
         districtId:
           type: integer
           description: ID района
-          format: int32
+          format: int64
     UserInfoForAdminPanel:
       type: object
       properties:
@@ -439,14 +472,6 @@ components:
         role:
           type: string
           description: Роль пользователя
-        cityId:
-          type: integer
-          description: Id города
-          format: int32
-        districtId:
-          type: integer
-          description: Id района
-          format: int32
         isBanned:
           type: boolean
           description: Забанен ли пользователь
@@ -482,11 +507,11 @@ components:
         cityId:
           type: integer
           description: ID города
-          format: int32
+          format: int64
         districtId:
           type: integer
           description: ID района
-          format: int32
+          format: int64
     CardResponse:
       type: object
       properties:
@@ -527,11 +552,11 @@ components:
         cityId:
           type: integer
           description: ID города
-          format: int32
+          format: int64
         districtId:
           type: integer
           description: ID района
-          format: int32
+          format: int64
     ComplexityChangeRequest:
       type: object
       properties:
