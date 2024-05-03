@@ -6,19 +6,26 @@ import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.ComplexityChangeRequest;
 import com.greencats.hackathon.model.IdResponse;
+import com.greencats.service.CardsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+@RestController
+@RequiredArgsConstructor
 public class CardsController implements CardsApi {
+
+    private final CardsService cardsService;
 
     @Override
     public ResponseEntity<List<CardListInfo>> getListCards(Integer limit, Integer offset) {
-        return CardsApi.super.getListCards(limit, offset);
+        return cardsService.getListCards(limit, offset);
     }
 
     @Override
-    public ResponseEntity<CardResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest) {
-        return CardsApi.super.changeCardComplexity(id, complexityChangeRequest);
+    public ResponseEntity<IdResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest) {
+        return cardsService.changeCardComplexity(id, complexityChangeRequest);
     }
 
     @Override

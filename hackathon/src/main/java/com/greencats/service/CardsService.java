@@ -12,7 +12,7 @@ import java.util.List;
 public interface CardsService {
     ResponseEntity<List<CardListInfo>> getListCards(Integer limit, Integer offset);
 
-    ResponseEntity<CardResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest);
+    ResponseEntity<IdResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest);
 
     ResponseEntity<IdResponse> createCard(CardRequest cardRequest);
 

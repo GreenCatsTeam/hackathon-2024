@@ -2,6 +2,8 @@ package com.greencats.service.jdbc;
 
 import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
+import com.greencats.dto.card.CardInfo;
+import com.greencats.dto.card.ShortCardInfo;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
@@ -11,9 +13,10 @@ import com.greencats.repository.CardRepository;
 import com.greencats.service.CardsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,27 +26,48 @@ public class JdbcCardsService implements CardsService {
     private final CardRepository cardRepository;
 
     @Override
+    @Transactional
     public ResponseEntity<List<CardListInfo>> getListCards(Integer limit, Integer offset) {
-        return null;
+        List<ShortCardInfo> shortCardInfos = cardRepository.getListCards(limit, offset);
+
+        List<CardListInfo> cardListInfos = new ArrayList<>();
+        for (ShortCardInfo cardInfo : shortCardInfos) {
+            CardListInfo cardListInfo = new CardListInfo();
+            cardListInfo.setCardId(cardInfo.cardId());
+            cardListInfo.setCardId(cardInfo.complexity());
+            cardListInfo.setCardId(cardInfo.longitude());
+            cardListInfo.setCardId(cardInfo.latitude());
+            cardListInfo.setCardId(cardInfo.statusId());
+            cardListInfo.setCardId(cardInfo.cityId());
+            cardListInfo.setCardId(cardInfo.districtId());
+        }
+
+        return new ResponseEntity<>(cardListInfos, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<CardResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest) {
+    @Transactional
+    public ResponseEntity<IdResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest) {
         CardEditInfo cardEditInfo = new CardEditInfo(id, complexityChangeRequest.getComplexity());
-        CardResponse cardResponce = cardRepository.updateCard(cardEditInfo);
+        IdResponse idResponse = new IdResponse();
+        Long cardId = cardRepository.updateCard(cardEditInfo);
+        idResponse.setId(cardId);
+        return new ResponseEntity<>(idResponse, HttpStatus.OK);
     }
 
     @Override
+    @Transactional
     public ResponseEntity<IdResponse> createCard(CardRequest cardRequest) {
         CardCreateInfo cardCreateInfo = new CardCreateInfo(
-
+            cardRequest.getUserId(),
             cardRequest.getComplexity(),
             cardRequest.getComment(),
             cardRequest.getPhoto(),
             cardRequest.getLatitude(),
             cardRequest.getLongitude(),
             cardRequest.getComplexity() * 2, // points magic math
-            cardRequest.getCityId()
+            cardRequest.getCityId(),
+            cardRequest.getDistrictId()
         );
 
         Long id = cardRepository.createCard(cardCreateInfo);
@@ -53,26 +77,28 @@ public class JdbcCardsService implements CardsService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<Void> deleteCard(Long id) {
         cardRepository.deleteCard(id);
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @Override
+    @Transactional
     public ResponseEntity<CardResponse> getCard(Long id) {
         CardInfo cardInfo = cardRepository.getCard(id);
 
         CardResponse cardResponse = new CardResponse(
-            cardInfo.getCardId(),
-            cardInfo.getUserId(),
-            cardInfo.getComplexity(),
-            cardInfo.getComment(),
-            cardInfo.getPhoto(),
-            cardInfo.getLatitude(),
-            cardInfo.getLongitude(),
-            cardInfo.getPoints(), // points magic math
-            cardInfo.getCityId()
+            cardInfo.cardId(),
+            cardInfo.UserId(),
+            cardInfo.complexity(),
+            cardInfo.comment(),
+            cardInfo.photo(),
+            cardInfo.latitude(),
+            cardInfo.longitude(),
+            cardInfo.points(),
+            cardInfo.cityId()
         );
-        return new ResponseEntity<>(cardResponse, HttpStatus.OK)
+        return new ResponseEntity<>(cardResponse, HttpStatus.OK);
     }
 }

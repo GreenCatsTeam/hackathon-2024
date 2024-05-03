@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class JdbcAuthService implements AuthService {
     private final JWTUtil jwtUtil;
 
     @Override
+    @Transactional
     public ResponseEntity<JWTToken> performLogin(String email, String password) {
         String encodedPasswordFromDB = authRepository.getEncodedPasswordByEmail(email);
 
@@ -37,6 +39,7 @@ public class JdbcAuthService implements AuthService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<JWTToken> performRegistration(String email, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         Long userId = authRepository.performRegistration(new AuthUserInfo(email, encodedPassword));
