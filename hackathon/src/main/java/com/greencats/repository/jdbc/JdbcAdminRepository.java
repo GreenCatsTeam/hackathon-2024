@@ -15,6 +15,29 @@ public class JdbcAdminRepository implements AdminRepository {
 
     @Override
     public List<UserInfo> adminUsersGet(Integer limit, Integer offset) {
-        return List.of();
+        return jdbcClient.sql("SELECT user_id, firstName, last_name, email, role, isBanned" +
+                " FROM users " +
+                " order by user_id desc " +
+                "limit :limit offset :offset")
+            .param("limit", limit)
+            .param("offset", offset)
+            .query(UserInfo.class).list();
     }
 }
+
+//Long userId,
+//String firstName,
+//String lastName,
+//String email,
+//String role,
+//Integer cityId,
+//Integer districtId,
+//Boolean isBanned
+
+//user_id      BIGSERIAL PRIMARY KEY,
+//first_name   VARCHAR(100) NOT NULL,
+//last_name    VARCHAR(100) NOT NULL,
+//email        VARCHAR(255) NOT NULL,
+//password     VARCHAR(100) NOT NULL,
+//role         VARCHAR(20)  NOT NULL,
+//organization VARCHAR(255) NULL

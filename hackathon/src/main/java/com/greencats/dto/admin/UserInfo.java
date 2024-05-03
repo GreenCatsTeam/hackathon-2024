@@ -6,8 +6,6 @@ public record UserInfo(
     String lastName,
     String email,
     String role,
-    Integer cityId,
-    Integer districtId,
     Boolean isBanned
 ) {
 }
