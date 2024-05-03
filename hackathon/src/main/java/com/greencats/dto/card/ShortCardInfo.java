@@ -1,10 +1,8 @@
 package com.greencats.dto.card;
 
-public record CardCreateInfo(
-        Long userId,
+public record ShortCardInfo(
+    Long cardId,
         Integer complexity,
-        String comment,
-        String photo,
         Double longitude,
         Double latitude,
         Long statusId,

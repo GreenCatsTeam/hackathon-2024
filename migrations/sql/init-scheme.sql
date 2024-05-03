@@ -10,7 +10,6 @@ CREATE TABLE District (
 CREATE TABLE City (
   city_id BIGSERIAL PRIMARY KEY,
   city_name varchar(255) NOT NULL,
-  district_id INT REFERENCES District(district_id)
 );
 
 CREATE TABLE Users (
@@ -30,13 +29,15 @@ CREATE TABLE Status (
 
 CREATE TABLE Card (
     card_id BIGSERIAL PRIMARY KEY,
-    complexity INT ,
+    complexity INT,
     comment VARCHAR(255),
     photo TEXT,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     points INT,
-    status_id INT REFERENCES Status(status_id)
+    city_id INT REFERENCES City(city_id),
+    status_id INT REFERENCES Status(status_id),
+    district_id INT REFERENCES District(district_id)
 );
 
 CREATE TABLE Cleaning (
