@@ -54,12 +54,21 @@ public class JdbcCardRepository implements CardRepository {
 
     @Override
     public Long deleteCard(Long id) {
-        return 0;
+        int affectedRows = client.sql("DELETE FROM card WHERE card_id = :card_id")
+            .param("card_id", id)
+            .update();
+
+        if (affectedRows == 0) {
+            throw new CardNotFoundException();
+        }
+
+        return id;
     }
 
     @Override
     public CardInfo getCard(Long id) {
-        return client.sql("SELECT complexity, comment, photo, latitude, longtitude, points, city_id FROM Card WHERE card_id = :id")
+        return client.sql("SELECT card_id, complexity, comment, photo, latitude, longtitude, points, city_id, Cleaning.user_id FROM Card " +
+                "JOIN Cleaning ON Card.card_id = Cleaning.card_id WHERE card_id = :card_id")
             .param("card_id", id)
             .query(CardInfo.class)
             .optional().orElseThrow(CardNotFoundException::new);
