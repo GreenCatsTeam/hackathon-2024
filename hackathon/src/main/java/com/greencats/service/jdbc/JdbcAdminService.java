@@ -22,6 +22,7 @@ public class JdbcAdminService implements AdminService {
     public ResponseEntity<List<UserInfoForAdminPanel>> adminUsersGet(Integer limit, Integer offset) {
         List<UserInfo> users = adminRepository.adminUsersGet(limit, offset);
 
+
         List<UserInfoForAdminPanel> usersInfoForAdminPanel = new ArrayList<>();
         for (UserInfo user : users) {
             UserInfoForAdminPanel userForAnswer = new UserInfoForAdminPanel();
@@ -30,8 +31,6 @@ public class JdbcAdminService implements AdminService {
             userForAnswer.setLastName(user.lastName());
             userForAnswer.setEmail(user.email());
             userForAnswer.setRole(user.role());
-            userForAnswer.setCityId(user.cityId());
-            userForAnswer.setDistrictId(user.districtId());
             userForAnswer.setIsBanned(user.isBanned());
             usersInfoForAdminPanel.add(userForAnswer);
         }
