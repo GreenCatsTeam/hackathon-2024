@@ -1,12 +1,15 @@
 package com.greencats.repository.jdbc;
 
+import com.greencats.dto.authorization.AuthUserInfo;
 import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
+import com.greencats.dto.card.CardInfo;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,8 +47,16 @@ public class JdbcCardRepository implements CardRepository {
         if (updatedRows == 0) {
             throw new UserNotFoundException();
         }
+
+        return cardEditInfo.card_id();
     }
 
-
+    @Override
+    public Optional<CardInfo> getCard(Long id) {
+        return client.sql("SELECT complexity, comment, photo, latitude, longtitude, points, city_id FROM Card WHERE card_id = :id")
+            .param("card_id", id)
+            .query(CardInfo.class)
+            .optional();
+    }
 
 }
