@@ -38,4 +38,10 @@ public class JdbcAdminService implements AdminService {
         }
         return new ResponseEntity<>(usersInfoForAdminPanel, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> adminBanUser(Long id) {
+        adminRepository.adminBanUser(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 }
