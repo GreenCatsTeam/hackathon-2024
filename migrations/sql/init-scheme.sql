@@ -1,6 +1,18 @@
 --liquibase formatted sql
 
 --changeset hackathon:1
+
+CREATE TABLE District (
+  district_id BIGSERIAL PRIMARY KEY,
+  district_name varchar(255)
+);
+
+CREATE TABLE City (
+  city_id BIGSERIAL PRIMARY KEY,
+  city_name varchar(255) NOT NULL,
+  district_id INT REFERENCES District(district_id)
+);
+
 CREATE TABLE Users (
     user_id BIGSERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
