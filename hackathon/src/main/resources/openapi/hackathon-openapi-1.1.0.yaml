@@ -51,10 +51,10 @@ paths:
       security:
         - basicAuth: [ ]
     put:
-      operationId: changeCardComplexity
+      operationId: updateCard
       tags:
         - cards
-      summary: Изменить сложность карточки
+      summary: Изменить сложность карточки и её статус
       parameters:
         - name: id
           in: path
@@ -69,7 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ComplexityChangeRequest'
+              $ref: '#/components/schemas/UpdateCardRequest'
         required: true
       responses:
         "200":
@@ -557,13 +557,17 @@ components:
           type: integer
           description: ID района
           format: int64
-    ComplexityChangeRequest:
+    UpdateCardRequest:
       type: object
       properties:
         complexity:
           type: integer
-          description: Сложность уборки
+          description: Сложность новой уборки
           format: int32
+        statusId:
+          type: integer
+          description: Id нового статуса
+          format: int64
     AuthorizeUserRequest:
       type: object
       properties:

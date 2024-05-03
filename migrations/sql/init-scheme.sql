@@ -35,7 +35,6 @@ CREATE TABLE Card (
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     points INT,
-    status_id INT REFERENCES Status(status_id),
     city_id INT REFERENCES City(city_id),
     district_id INT REFERENCES District(district_id),
     is_deleted BOOLEAN DEFAULT FALSE

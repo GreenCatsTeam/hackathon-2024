@@ -4,11 +4,13 @@ import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
 import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
+import com.greencats.exception.WrongStatusException;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.ComplexityChangeRequest;
 import com.greencats.hackathon.model.IdResponse;
+import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.repository.CardRepository;
 import com.greencats.service.CardsService;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +49,9 @@ public class JdbcCardsService implements CardsService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest) {
-        CardEditInfo cardEditInfo = new CardEditInfo(id, complexityChangeRequest.getComplexity());
+    public ResponseEntity<IdResponse> updateCard(Long id, UpdateCardRequest updateCardRequest) {
+        CardEditInfo cardEditInfo =
+            new CardEditInfo(id, updateCardRequest.getComplexity(), updateCardRequest.getStatusId());
         IdResponse idResponse = new IdResponse();
         Long cardId = cardRepository.updateCard(cardEditInfo);
         idResponse.setId(cardId);

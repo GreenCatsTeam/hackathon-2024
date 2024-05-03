@@ -6,12 +6,13 @@ import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
 import com.greencats.exception.CardNotCreatedException;
 import com.greencats.exception.CardNotFoundException;
+import com.greencats.exception.WrongStatusException;
 import com.greencats.repository.CardRepository;
+import java.time.ZonedDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import java.time.ZonedDateTime;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -47,10 +48,21 @@ public class JdbcCardRepository implements CardRepository {
 
     @Override
     public Long updateCard(CardEditInfo cardEditInfo) {
-        int updatedRows = client.sql("UPDATE Card SET complexity = :complexity WHERE card_id = :card_id")
-            .param("complexity", cardEditInfo.complexity())
+        Long statusId = client.sql("SELECT cleaning.status_id from cleaning where card_id = :card_id")
             .param("card_id", cardEditInfo.cardId())
-            .update();
+            .query(Long.class)
+            .optional().orElseThrow(CardNotFoundException::new);
+
+        if (cardEditInfo.statusId() < statusId || cardEditInfo.statusId() < 1 || cardEditInfo.statusId() > 4) {
+            throw new WrongStatusException();
+        }
+
+        int updatedRows =
+            client.sql("UPDATE Card SET complexity = :complexity, status_id = :status_id WHERE card_id = :card_id")
+                .param("complexity", cardEditInfo.complexity())
+                .param("status_id", cardEditInfo.statusId())
+                .param("card_id", cardEditInfo.cardId())
+                .update();
 
         if (updatedRows == 0) {
             throw new CardNotFoundException();
@@ -83,7 +95,13 @@ public class JdbcCardRepository implements CardRepository {
 
     @Override
     public List<ShortCardInfo> getListCards(Integer limit, Integer offset) {
-        return client.sql("SELECT ");
+        return client.sql("SELECT card_id, complexity, longitude, latitude, status_id, city_id, district_id" +
+                " FROM card " +
+                "order by card_id desc " +
+                "limit :limit offset :offset")
+            .param("limit", limit)
+            .param("offset", offset)
+            .query(ShortCardInfo.class).list();
     }
 
 }
