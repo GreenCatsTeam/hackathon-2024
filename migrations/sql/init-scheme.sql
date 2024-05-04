@@ -43,9 +43,11 @@ CREATE TABLE Card (
     is_deleted BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE MaxStatus(
-    card_id INT REFERENCES Card(card_id),
-    max_status BIGINT
+CREATE TABLE MaxStatus
+(
+    card_id    INT REFERENCES Card (card_id),
+    max_status BIGINT,
+    max_count_of_proof INT
 );
 
 CREATE TABLE Cleaning (
@@ -53,7 +55,9 @@ CREATE TABLE Cleaning (
     card_id INT REFERENCES Card(card_id) NOT NULL,
     status_id INT REFERENCES Status(status_id),
     user_id INT REFERENCES Users(user_id) NULL,
-    time timestamptz
+    time timestamptz,
+    admin_proof boolean,
+    count_of_proof INT
 );
 
 -- Заполнение таблицы статусов
