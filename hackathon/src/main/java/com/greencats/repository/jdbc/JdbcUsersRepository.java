@@ -35,11 +35,18 @@ public class JdbcUsersRepository implements UsersRepository {
 
     @Override
     public Long usersIdPut(Long id, UserEditInfo userEditInfo) {
-        int affectedRows = client.sql("UPDATE users SET email = :email, password = :password WHERE user_id = :id")
-            .param(EMAIL_FIELD, userEditInfo.email())
-            .param(PASSWORD_FIELD, userEditInfo.password())
-            .param("id", id)
-            .update();
+        int affectedRows =
+            client.sql("UPDATE users SET " +
+                    "first_name =:first_name, last_name =:last_name, email =:email, password = :password, role =: role, organization := organization " +
+                    "WHERE user_id = :id")
+                .param("first_name", userEditInfo.first_name())
+                .param("last_name", userEditInfo.last_name())
+                .param(EMAIL_FIELD, userEditInfo.email())
+                .param(PASSWORD_FIELD, userEditInfo.password())
+                .param("role", userEditInfo.role())
+                .param("organization", userEditInfo.organization())
+                .param("id", id)
+                .update();
 
         if (affectedRows == 0) {
             throw new UserNotFoundException();
@@ -66,20 +73,17 @@ public class JdbcUsersRepository implements UsersRepository {
 
     @Override
     public List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id) {
-        return client.sql(
-                "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, City.city_name, District.district_name " +
-                    "FROM Card " +
-                    "INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
-                    "INNER JOIN city ON Card.city_id = city.city_id " +
-                    "INNER JOIN district ON Card.district_id = district.district_id " +
-                    "INNER JOIN cleaning ON cleaning.card_id = Card.card_id " +  // Assuming cleaning relates to Card by card_id
-                    "WHERE Card.is_deleted != true AND cleaning.cleaning_id = :user_id " +  // Move user_id filtering to WHERE clause
-                    "LIMIT :limit OFFSET :offset"
-            )
-            .param("user_id", id)
-            .param("limit", limit)
-            .param("offset", offset)
-            .query(ShortCardInfo.class).list();
+    return client.sql(
+            "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, Card.city_id, Card.district_id " +
+                "FROM Card INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
+                "INNER JOIN Cleaning ON Card.card_id = Cleaning.card_id" +
+                "WHERE Card.is_deleted != true AND Cleaning.user_id =:id" +
+                "LIMIT :limit OFFSET :offset"
+        )
+        .param("id", id)
+        .param("limit", limit)
+        .param("offset", offset)
+        .query(ShortCardInfo.class).list();
     }
 
     @Override
@@ -92,3 +96,16 @@ public class JdbcUsersRepository implements UsersRepository {
         return result != null && (Boolean) result;
     }
 }
+
+//@Override
+//public List<ShortCardInfo> getListCards(Integer limit, Integer offset) {
+//    return client.sql(
+//            "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, Card.city_id, Card.district_id " +
+//                "FROM Card INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
+//                "WHERE Card.is_deleted != true " +
+//                "LIMIT :limit OFFSET :offset"
+//        )
+//        .param("limit", limit)
+//        .param("offset", offset)
+//        .query(ShortCardInfo.class).list();
+//}
