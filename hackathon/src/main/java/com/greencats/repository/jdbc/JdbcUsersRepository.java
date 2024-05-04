@@ -57,7 +57,7 @@ public class JdbcUsersRepository implements UsersRepository {
 
     @Override
     public UserCredentials findByEmail(String email) {
-        return client.sql("SELECT email, password, role FROM users WHERE email = :email")
+        return client.sql("SELECT email, password, role, is_banned FROM users WHERE email = :email")
             .param(EMAIL_FIELD, email)
             .query(UserCredentials.class)
             .optional().orElseThrow(UserNotFoundException::new);
