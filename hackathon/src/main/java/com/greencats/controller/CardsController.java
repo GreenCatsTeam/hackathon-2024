@@ -7,6 +7,7 @@ import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.service.CardsService;
+import com.greencats.service.NearCardsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,8 @@ import java.util.List;
 public class CardsController implements CardsApi {
 
     private final CardsService cardsService;
+
+    private final NearCardsService nearCardsService;
 
     @Override
     public ResponseEntity<List<CardListInfo>> getListCards(Integer limit, Integer offset) {
@@ -41,5 +44,15 @@ public class CardsController implements CardsApi {
     @Override
     public ResponseEntity<CardResponse> getCard(Long id) {
         return cardsService.getCard(id);
+    }
+
+    @Override
+    public ResponseEntity<IdResponse> approveCard(Long id, CardRequest cardRequest) {
+        return CardsApi.super.approveCard(id, cardRequest);
+    }
+
+    @Override
+    public ResponseEntity<List<IdResponse>> getNearCards(Double x1, Double y1, Double x2, Double y2) {
+        return nearCardsService.getNearCards(x1, y1, x2, y2);
     }
 }

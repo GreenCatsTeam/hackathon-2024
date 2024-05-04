@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: Hackathon API
-  description: "API для "
+  title: CleanMap API
+  description: "API для CleanMap"
   version: 1.1.0
 servers:
-  - url: https://greencats.com/
+  - url: https://cleanmap.com/
 tags:
   - name: users
     description: Работа с пользователями
@@ -12,14 +12,14 @@ tags:
     description: Авторизация
   - name: cards
     description: Карточка
-  - name: nearCards
-    description: Ближайшие карточки пользователя
+  - name: admin
+    description: Работа с админкой
 paths:
-  /nearCards:
+  /cards/nearCards:
     get:
       operationId: getNearCards
       tags:
-        - nearCards
+        - cards
       parameters:
         - name: x1
           in: query
@@ -175,7 +175,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-  /cards/:
+  /cards/approve/{id}:
+    post:
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      operationId: approveCard
+      tags:
+        - cards
+      summary: Апрувнуть карточку
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardRequest'
+        required: true
+      responses:
+        "200":
+          description: Карточка получена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /cards:
     post:
       operationId: createCard
       tags:
@@ -240,7 +281,7 @@ paths:
   /admin/users:
     get:
       tags:
-        - users
+        - admin
       summary: Получить список пользователей
       description: Возвращает список пользователей со смещением offset и количеством limit
       parameters:
@@ -287,6 +328,44 @@ paths:
       responses:
         "200":
           description: Пользователь успешно забанен
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Пользователь с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /admin/userRights/{id}:
+    post:
+      operationId: changeUserRights
+      parameters:
+        - name: id
+          in: path
+          description: ID пользователя
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+        - name: role
+          in: query
+          description: Роль пользователя
+          required: true
+          schema:
+            type: integer
+            format: int64
+      tags:
+        - admin
+      summary: Изменить права пользователя
+      responses:
+        "200":
+          description: Права пользователя успешно обновлены
         "400":
           description: Некорректные параметры запроса
           content:
@@ -585,25 +664,6 @@ components:
         districtName:
           type: string
           description: Название района
-    NearCardsRequest:
-      type: object
-      properties:
-        x1:
-          type: number
-          description: левый нижний угол
-          format: double
-        y1:
-          type: number
-          description: левый нижний угол
-          format: double
-        x2:
-          type: number
-          description: правый верхний угол
-          format: double
-        y2:
-          type: number
-          description: правый верхний угол
-          format: double
     CardResponse:
       type: object
       properties:
@@ -705,16 +765,6 @@ components:
         jwtToken:
           type: string
           description: JWT токен пользователя
-    NewPasswordRequest:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID пользователя
-          format: int64
-        new_password:
-          type: string
-          description: Новый пароль
     ApiErrorResponse:
       type: object
       properties:

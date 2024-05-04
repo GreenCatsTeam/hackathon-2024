@@ -18,7 +18,7 @@ public class TestController {
     @SuppressWarnings("MagicNumber")
     ResponseEntity<IdResponse> usersIdDelete() {
         IdResponse idResponse = new IdResponse();
-        idResponse.setId(22L);
+        idResponse.setId(41L);
         return new ResponseEntity<>(idResponse, HttpStatus.OK);
     }
 }

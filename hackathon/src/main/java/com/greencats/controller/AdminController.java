@@ -23,4 +23,9 @@ public class AdminController implements AdminApi {
     public ResponseEntity<Void> banUserById(Long id) {
         return adminService.adminBanUser(id);
     }
+
+    @Override
+    public ResponseEntity<Void> changeUserRights(Long id, Long role) {
+        return AdminApi.super.changeUserRights(id, role);
+    }
 }
