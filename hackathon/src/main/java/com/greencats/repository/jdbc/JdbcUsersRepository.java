@@ -37,8 +37,8 @@ public class JdbcUsersRepository implements UsersRepository {
     public Long usersIdPut(Long id, UserEditInfo userEditInfo) {
         int affectedRows =
             client.sql("UPDATE users SET " +
-                    "first_name =:first_name, last_name =:last_name, email =:email, password = :password, role =: role, organization := organization " +
-                    "WHERE user_id = :id")
+                    "first_name =:first_name, last_name =:last_name, email =:email, password =:password, role =:role, organization =:organization " +
+                    "WHERE user_id =:id")
                 .param("first_name", userEditInfo.first_name())
                 .param("last_name", userEditInfo.last_name())
                 .param(EMAIL_FIELD, userEditInfo.email())
@@ -79,7 +79,8 @@ public class JdbcUsersRepository implements UsersRepository {
                     "INNER JOIN public.district d on d.district_id = Card.district_id " +
                     "INNER JOIN public.cleaning cl on cl.card_id = Card.card_id " +
                     "WHERE Card.is_deleted != true AND cl.user_id =:id " +
-                    "LIMIT :limit OFFSET :offset").param("id", id)
+                    "LIMIT :limit OFFSET :offset")
+            .param("id", id)
             .param("limit", limit)
             .param("offset", offset)
             .query(ShortCardInfo.class).list();
