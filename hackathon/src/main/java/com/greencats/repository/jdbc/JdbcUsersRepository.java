@@ -22,7 +22,7 @@ public class JdbcUsersRepository implements UsersRepository {
 
     @Override
     public Long usersIdDelete(Long id) {
-        int affectedRows = client.sql("DELETE FROM users WHERE user_id = :id")
+        int affectedRows = client.sql("UPDATE users SET is_deleted = TRUE WHERE user_id = :id")
             .param("id", id)
             .update();
 

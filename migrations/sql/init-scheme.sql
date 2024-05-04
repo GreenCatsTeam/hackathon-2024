@@ -21,7 +21,8 @@ CREATE TABLE Users (
     organization VARCHAR(255) NULL,
     city_id BIGINT REFERENCES City(city_id),
     district_id BIGINT REFERENCES District(district_id),
-    is_banned BOOLEAN DEFAULT FALSE
+    is_banned BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Status (
