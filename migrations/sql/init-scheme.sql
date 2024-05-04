@@ -61,49 +61,54 @@ CREATE TABLE Cleaning (
 );
 
 -- Заполнение таблицы статусов
-INSERT INTO Status (status_name) VALUES
-     ('moderating'),
-     ('created'),
-     ('in process'),
-     ('being reviewed'),
-     ('closed');
+INSERT INTO Status (status_name)
+VALUES ('moderating'),
+       ('created'),
+       ('in process'),
+       ('being reviewed'),
+       ('closed');
 
 --changeset hackathon:2
-INSERT INTO District (district_name) VALUES
-     ('North District'),
-     ('South District'),
-     ('East District'),
-     ('West District');
+INSERT INTO District (district_name)
+VALUES ('North District'),
+       ('South District'),
+       ('East District'),
+       ('West District');
 
-INSERT INTO City (city_name) VALUES
-     ('Metropolis'),
-     ('Gotham'),
-     ('Springfield'),
-     ('Riverdale');
+INSERT INTO City (city_name)
+VALUES ('Metropolis'),
+       ('Gotham'),
+       ('Springfield'),
+       ('Riverdale');
 
-INSERT INTO Users (first_name, last_name, email, password, role, organization, city_id, district_id, is_banned) VALUES
-    ('John', 'Doe', 'john.doe@example.com', 'securepassword123', 'Admin', 'ExampleCorp', 1, 1, FALSE),
-    ('Jane', 'Smith', 'jane.smith@example.com', 'securepassword456', 'User', 'OtherCorp', 2, 2, FALSE),
-    ('Alice', 'Johnson', 'alice.johnson@example.com', 'securepassword789', 'Manager', NULL, 3, 3, FALSE),
-    ('Bob', 'Brown', 'bob.brown@example.com', 'securepassword101', 'User', 'ExampleCorp', 4, 4, TRUE);
+INSERT INTO Users (first_name, last_name, email, password, role, organization, city_id, district_id, is_banned)
+VALUES ('John', 'Doe', 'john.doe@example.com', 'securepassword123', 'Admin', 'ExampleCorp', 1, 1, FALSE),
+       ('Jane', 'Smith', 'jane.smith@example.com', 'securepassword456', 'User', 'OtherCorp', 2, 2, FALSE),
+       ('Alice', 'Johnson', 'alice.johnson@example.com', 'securepassword789', 'Manager', NULL, 3, 3, FALSE),
+       ('Bob', 'Brown', 'bob.brown@example.com', 'securepassword101', 'User', 'ExampleCorp', 4, 4, TRUE);
 
-INSERT INTO Card (complexity, comment, photo, latitude, longitude, points, city_id, district_id) VALUES
-     (5, 'Large area with lots of waste', 'http://example.com/photo1.jpg', 40.712776, -74.005974, 100, 1, 1),
-     (3, 'Small cleanup needed', 'http://example.com/photo2.jpg', 34.052235, -118.243683, 50, 2, 2),
-     (2, 'Moderate maintenance', 'http://example.com/photo3.jpg', 41.878113, -87.629799, 75, 3, 3),
-     (4, 'Urgent attention needed', 'http://example.com/photo4.jpg', 37.774929, -122.419416, 150, 4, 4);
+INSERT INTO Card (complexity, comment, photo, latitude, longitude, points, city_id, district_id)
+VALUES (5, 'Large area with lots of waste', 'http://example.com/photo1.jpg', 51.522880, 46.020296, 100, 1, 1),
+       (3, 'Small cleanup needed', 'http://example.com/photo2.jpg', 51.522873, 46.018126, 50, 2, 2),
+       (2, 'Moderate maintenance', 'http://example.com/photo3.jpg', 51.522542, 46.020968, 75, 3, 3),
+       (4, 'Urgent attention needed', 'http://example.com/photo4.jpg', 51.523477, 46.021631, 150, 4, 4),
+       (2, 'Urgent attention needed2', 'http://example.com/photo44.jpg', 51.522415, 46.020017, 150, 4, 4);
 
-INSERT INTO MaxStatus(card_id, max_status) VALUES
-     (1, 1),
-     (2, 2),
-     (3, 3),
-     (4, 4);
+INSERT INTO MaxStatus(card_id, max_status, max_count_of_proof)
+VALUES (1, 1, 0),
+       (2, 2, 0),
+       (3, 3, 0),
+       (4, 4, 0),
+       (5, 5, 3);
 
-INSERT INTO Cleaning (card_id, status_id, user_id, time) VALUES
-     (1, 1, 1, '2023-01-01T10:00:00Z'),
-     (2, 2, 2, '2023-01-02T11:00:00Z'),
-     (3, 3, 3, '2023-01-03T12:00:00Z'),
-     (4, 4, 4, '2023-01-04T13:00:00Z');
+INSERT INTO Cleaning (card_id, status_id, user_id, time, admin_proof, count_of_proof)
+VALUES (1, 1, 1, '2023-01-01T10:00:00Z', false, 0),
+       (2, 2, 2, '2023-01-02T11:00:00Z', true, 0),
+       (3, 3, 3, '2023-01-03T12:00:00Z', true, 0),
+       (4, 4, 4, '2023-01-04T13:00:00Z', true, 0),
+       (5, 4, 1, '2023-01-04T13:00:00Z', true, 1),
+       (5, 4, 2, '2023-01-04T13:00:00Z', true, 2),
+       (5, 5, 3, '2023-01-04T13:00:00Z', true, 3);
 
 
 --rollback drop table User, Status, Card, Cleaning;
