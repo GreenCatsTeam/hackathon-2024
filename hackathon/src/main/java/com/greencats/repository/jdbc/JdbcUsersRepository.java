@@ -83,4 +83,14 @@ public class JdbcUsersRepository implements UsersRepository {
             .param("offset", offset)
             .query(ShortCardInfo.class).list();
     }
+
+    @Override
+    public Boolean isBanned(Long id) {
+        Object result = client.sql("SELECT is_banned FROM Users WHERE user_id = :id")
+            .param("id", id)
+            .query()
+            .rowSet().first();
+
+        return result != null && (Boolean) result;
+    }
 }

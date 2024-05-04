@@ -16,4 +16,5 @@ public interface UsersRepository {
     UserCredentials findByEmail(String username);
 
     List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id);
+    Boolean isBanned(Long id);
 }
