@@ -1,4 +1,4 @@
-package com.greencats.configuration.security;//package com.greencats.configuration.security;
+package com.greencats.configuration.security;
 //
 //import com.greencats.configuration.security.filters.JWTFilter;
 //import com.greencats.security.UserDetailsServiceImpl;
@@ -26,15 +26,15 @@ package com.greencats.configuration.security;//package com.greencats.configurati
 //                auth -> auth
 //                    .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registration").permitAll()
 //                    .anyRequest().authenticated())
-//            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 //            .userDetailsService(userDetailsService)
-//            .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//
-//        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//            .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 //        return httpSecurity.build();
 //    }
 //}
 
+
+// БЕЗ АВТОРИЗАЦИИ
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +51,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
-        // Configure HTTP security to permit all requests without any authentication
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .anyRequest().permitAll())
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

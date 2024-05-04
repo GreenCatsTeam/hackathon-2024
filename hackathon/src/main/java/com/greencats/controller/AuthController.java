@@ -22,6 +22,15 @@ public class AuthController implements AuthApi {
 
     @Override
     public ResponseEntity<JWTToken> performRegistration(RegisterUserRequest registerUserRequest) {
-        return authService.performRegistration(registerUserRequest.getEmail(), registerUserRequest.getPassword());
+        return authService.performRegistration(
+            registerUserRequest.getFirstName(),
+            registerUserRequest.getLastName(),
+            registerUserRequest.getEmail(),
+            registerUserRequest.getPassword(),
+            registerUserRequest.getRole(),
+            registerUserRequest.getOrganization(),
+            registerUserRequest.getCityName(),
+            registerUserRequest.getDistrictName()
+        );
     }
 }

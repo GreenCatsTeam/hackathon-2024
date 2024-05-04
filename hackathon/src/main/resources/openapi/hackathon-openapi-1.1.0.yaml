@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CleaningResponse'
+                $ref: '#/components/schemas/IdResponse'
         "400":
           description: Некорректные параметры запроса
           content:
