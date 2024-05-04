@@ -444,13 +444,11 @@ components:
           description: Id статуса
           format: int64
         cityName:
-          type: integer
+          type: string
           description: Название города
-          format: int64
         districtName:
-          type: integer
+          type: string
           description: Название района
-          format: int64
     UserInfoForAdminPanel:
       type: object
       properties:

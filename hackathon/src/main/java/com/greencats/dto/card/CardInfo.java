@@ -10,7 +10,7 @@ public record CardInfo(
     Double longitude,
     Long statusId,
     Integer points,
-    Long cityId,
-    Long districtId
+    String cityName,
+    String districtName
 ) {
 }

@@ -8,7 +8,7 @@ public record CardCreateInfo (
     Double longitude,
     Double latitude,
     Integer points,
-    Long cityId,
-    Long districtId
+    String cityName,
+    String districtName
 ) {
 }

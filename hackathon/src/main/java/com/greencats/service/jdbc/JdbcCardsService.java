@@ -40,8 +40,8 @@ public class JdbcCardsService implements CardsService {
             cardListInfo.setLongitude(cardInfo.longitude());
             cardListInfo.setLatitude(cardInfo.latitude());
             cardListInfo.setStatusId(cardInfo.maxStatus());
-            cardListInfo.setCityId(cardInfo.cityId());
-            cardListInfo.setDistrictId(cardInfo.districtId());
+            cardListInfo.setCityName(cardInfo.cityName());
+            cardListInfo.setDistrictName(cardInfo.districtName());
             cardListInfos.add(cardListInfo);
         }
 
@@ -75,8 +75,8 @@ public class JdbcCardsService implements CardsService {
             cardRequest.getLatitude(),
             cardRequest.getLongitude(),
             cardRequest.getComplexity() * 2, // points magic math
-            cardRequest.getCityId(),
-            cardRequest.getDistrictId()
+            cardRequest.getCityName(),
+            cardRequest.getDistrictName()
         );
 
         Long id = cardRepository.createCard(cardCreateInfo);
@@ -107,8 +107,8 @@ public class JdbcCardsService implements CardsService {
         cardResponse.setLongitude(cardInfo.longitude());
         cardResponse.setPoints(cardInfo.points());
         cardResponse.setStatusId(cardInfo.statusId());
-        cardResponse.setCityId(cardInfo.cityId());
-        cardResponse.setDistrictId(cardInfo.districtId());
+        cardResponse.setCityName(cardInfo.cityName());
+        cardResponse.setDistrictName(cardInfo.districtName());
         return new ResponseEntity<>(cardResponse, HttpStatus.OK);
     }
 }

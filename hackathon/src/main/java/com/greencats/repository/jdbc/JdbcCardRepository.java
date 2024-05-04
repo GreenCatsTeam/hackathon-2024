@@ -6,6 +6,8 @@ import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
 import com.greencats.exception.CardNotCreatedException;
 import com.greencats.exception.CardNotFoundException;
+import com.greencats.exception.CityNotFoundException;
+import com.greencats.exception.DistrictNotFoundException;
 import com.greencats.exception.WrongStatusException;
 import com.greencats.repository.CardRepository;
 import java.sql.Timestamp;
@@ -27,6 +29,16 @@ public class JdbcCardRepository implements CardRepository {
     public Long createCard(CardCreateInfo cardCreateInfo) {
         boolean cardExists = false; //TODO: Add check for cards in defined area
 
+        Long cityId = client.sql("SELECT city.city_id FROM city WHERE city_name = :city_name")
+            .param("city_name", cardCreateInfo.cityName())
+            .query(Long.class)
+            .optional().orElseThrow(CityNotFoundException::new);
+
+        Long districtid = client.sql("SELECT district.district_id FROM district WHERE district_name = :district_name")
+            .param("district_name", cardCreateInfo.districtName())
+            .query(Long.class)
+            .optional().orElseThrow(DistrictNotFoundException::new);
+
         Long cardId = client.sql(
                 "INSERT INTO Card(complexity, comment, photo, latitude, longitude, points, city_id, district_id)" +
                     "VALUES(:complexity, :comment, :photo, :latitude, :longitude, :points, :city_id, :district_id) RETURNING card_id")
@@ -36,13 +48,12 @@ public class JdbcCardRepository implements CardRepository {
             .param("latitude", cardCreateInfo.latitude())
             .param("longitude", cardCreateInfo.longitude())
             .param("points", cardCreateInfo.points())
-            .param("city_id", cardCreateInfo.cityId())
-            .param("district_id", cardCreateInfo.districtId())
+            .param("city_id", cityId)
+            .param("district_id", districtid)
             .query(Long.class)
             .optional().orElseThrow(CardNotCreatedException::new);
 
         if (usersRepository.isExistUserById(cardCreateInfo.userId())) {
-
             client.sql(
                     "INSERT INTO cleaning(card_id, status_id, user_id, time) VALUES (:card_id, :status_id, :user_id, :time)")
                 .param("card_id", cardId)
@@ -68,7 +79,7 @@ public class JdbcCardRepository implements CardRepository {
             .query(Long.class)
             .optional().orElseThrow(CardNotFoundException::new);
 
-        if (cardEditInfo.statusId() < maxStatus || cardEditInfo.statusId() < 1 || cardEditInfo.statusId() >= 4) {
+        if (cardEditInfo.statusId() < maxStatus || cardEditInfo.statusId() < 1 || cardEditInfo.statusId() >= 5) {
             throw new WrongStatusException();
         }
 
