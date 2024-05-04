@@ -26,11 +26,9 @@ public class SecurityConfig {
                 auth -> auth
                     .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registration").permitAll()
                     .anyRequest().authenticated())
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .userDetailsService(userDetailsService)
-            .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }

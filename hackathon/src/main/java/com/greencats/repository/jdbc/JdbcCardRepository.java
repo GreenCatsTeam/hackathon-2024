@@ -122,9 +122,11 @@ public class JdbcCardRepository implements CardRepository {
     @Override
     public CardInfo getCard(Long id) {
         return client.sql(
-                "SELECT card.card_id, user_id, card.complexity, card.comment, card.photo, card.latitude, card.longitude, status_id, card.points, card.city_id, district_id " +
+                "SELECT card.card_id, user_id, card.complexity, card.comment, card.photo, card.latitude, card.longitude, status_id, card.points, city_name, district_name " +
                     "FROM Card " +
                     "INNER JOIN Cleaning ON card.card_id = Cleaning.card_id " +
+                    "INNER JOIN public.city c on c.city_id = Card.city_id " +
+                    "INNER JOIN public.district d on d.district_id = Card.district_id " +
                     "WHERE card.card_id = :card_id AND is_deleted != true " +
                     "ORDER BY Cleaning.time DESC " +
                     "LIMIT 1")
@@ -136,8 +138,10 @@ public class JdbcCardRepository implements CardRepository {
     @Override
     public List<ShortCardInfo> getListCards(Integer limit, Integer offset) {
         return client.sql(
-                "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, Card.city_id, Card.district_id " +
+                "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, city_name, district_name " +
                     "FROM Card INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
+                    "INNER JOIN public.city c on c.city_id = Card.city_id " +
+                    "INNER JOIN public.district d on d.district_id = Card.district_id " +
                     "WHERE Card.is_deleted != true " +
                     "LIMIT :limit OFFSET :offset"
             )

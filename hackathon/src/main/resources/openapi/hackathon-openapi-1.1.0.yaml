@@ -54,7 +54,6 @@ paths:
 #            application/json:
 #              schema:
 #                $ref: '#/components/schemas/ApiErrorResponse'
-
   /cards/{id}:
     get:
       operationId: getCard
@@ -90,8 +89,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
     put:
       operationId: updateCard
       tags:
@@ -132,8 +129,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
     delete:
       operationId: deleteCard
       tags:
@@ -164,8 +159,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
   /cards/:
     post:
       operationId: createCard
@@ -197,8 +190,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
     get:
       tags:
         - cards
@@ -292,8 +283,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
   /auth/registration:
     post:
       operationId: performRegistration
@@ -396,8 +385,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
     delete:
       tags:
         - users
@@ -431,8 +418,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: []
     get:
       tags:
         - users
@@ -473,8 +458,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CardListInfo'
-      security:
-        - basicAuth: [ ]
 components:
   schemas:
     RegisterUserRequest:
@@ -743,7 +726,3 @@ components:
           type: array
           items:
             type: string
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
