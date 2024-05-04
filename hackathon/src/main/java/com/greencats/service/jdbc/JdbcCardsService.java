@@ -4,11 +4,13 @@ import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
 import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
+import com.greencats.exception.WrongStatusException;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.ComplexityChangeRequest;
 import com.greencats.hackathon.model.IdResponse;
+import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.repository.CardRepository;
 import com.greencats.service.CardsService;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +39,10 @@ public class JdbcCardsService implements CardsService {
             cardListInfo.setComplexity(cardInfo.complexity());
             cardListInfo.setLongitude(cardInfo.longitude());
             cardListInfo.setLatitude(cardInfo.latitude());
-            cardListInfo.setStatusId(cardInfo.statusId());
-            cardListInfo.setCityId(cardInfo.cityId());
-            cardListInfo.setDistrictId(cardInfo.districtId());
+            cardListInfo.setStatusId(cardInfo.maxStatus());
+            cardListInfo.setCityName(cardInfo.cityName());
+            cardListInfo.setDistrictName(cardInfo.districtName());
+            cardListInfos.add(cardListInfo);
         }
 
         return new ResponseEntity<>(cardListInfos, HttpStatus.OK);
@@ -47,8 +50,14 @@ public class JdbcCardsService implements CardsService {
 
     @Override
     @Transactional
-    public ResponseEntity<IdResponse> changeCardComplexity(Long id, ComplexityChangeRequest complexityChangeRequest) {
-        CardEditInfo cardEditInfo = new CardEditInfo(id, complexityChangeRequest.getComplexity());
+    public ResponseEntity<IdResponse> updateCard(Long id, UpdateCardRequest updateCardRequest) {
+        CardEditInfo cardEditInfo =
+            new CardEditInfo(
+                id,
+                updateCardRequest.getComplexity(),
+                updateCardRequest.getStatusId(),
+                updateCardRequest.getUserId()
+            );
         IdResponse idResponse = new IdResponse();
         Long cardId = cardRepository.updateCard(cardEditInfo);
         idResponse.setId(cardId);
@@ -65,10 +74,9 @@ public class JdbcCardsService implements CardsService {
             cardRequest.getPhoto(),
             cardRequest.getLatitude(),
             cardRequest.getLongitude(),
-            cardRequest.getStatusId(), // id status - created
             cardRequest.getComplexity() * 2, // points magic math
-            cardRequest.getCityId(),
-            cardRequest.getDistrictId()
+            cardRequest.getCityName(),
+            cardRequest.getDistrictName()
         );
 
         Long id = cardRepository.createCard(cardCreateInfo);
@@ -99,8 +107,8 @@ public class JdbcCardsService implements CardsService {
         cardResponse.setLongitude(cardInfo.longitude());
         cardResponse.setPoints(cardInfo.points());
         cardResponse.setStatusId(cardInfo.statusId());
-        cardResponse.setCityId(cardInfo.cityId());
-        cardResponse.setDistrictId(cardInfo.districtId());
+        cardResponse.setCityName(cardInfo.cityName());
+        cardResponse.setDistrictName(cardInfo.districtName());
         return new ResponseEntity<>(cardResponse, HttpStatus.OK);
     }
 }

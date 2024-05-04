@@ -5,8 +5,8 @@ public record ShortCardInfo(
     Integer complexity,
     Double longitude,
     Double latitude,
-    Long statusId,
-    Long cityId,
-    Long districtId
+    Long maxStatus,
+    String cityName,
+    String districtName
 ) {
 }

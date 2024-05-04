@@ -17,7 +17,7 @@ public class JdbcAdminRepository implements AdminRepository {
 
     @Override
     public List<UserInfo> adminUsersGet(Integer limit, Integer offset) {
-        return jdbcClient.sql("SELECT user_id, firstName, last_name, email, role, isBanned" +
+        return jdbcClient.sql("SELECT user_id, users.first_name, last_name, email, role, is_banned" +
                 " FROM users " +
                 " order by user_id desc " +
                 "limit :limit offset :offset")

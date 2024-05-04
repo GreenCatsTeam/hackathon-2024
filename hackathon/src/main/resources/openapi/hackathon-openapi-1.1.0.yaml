@@ -51,10 +51,10 @@ paths:
       security:
         - basicAuth: [ ]
     put:
-      operationId: changeCardComplexity
+      operationId: updateCard
       tags:
         - cards
-      summary: Изменить сложность карточки
+      summary: Изменить сложность карточки и её статус
       parameters:
         - name: id
           in: path
@@ -69,7 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ComplexityChangeRequest'
+              $ref: '#/components/schemas/UpdateCardRequest'
         required: true
       responses:
         "200":
@@ -456,14 +456,12 @@ components:
         organization:
           type: string
           description: Организация
-        cityId:
-          type: integer
-          description: Id города
-          format: int32
-        districtId:
-          type: integer
-          description: Id района
-          format: int32
+        cityName:
+          type: string
+          description: Название города
+        districtName:
+          type: string
+          description: Название района
     CardListInfo:
       type: object
       properties:
@@ -487,14 +485,12 @@ components:
           type: integer
           description: Id статуса
           format: int64
-        cityId:
-          type: integer
-          description: ID города
-          format: int64
-        districtId:
-          type: integer
-          description: ID района
-          format: int64
+        cityName:
+          type: string
+          description: Название города
+        districtName:
+          type: string
+          description: Название района
     UserInfoForAdminPanel:
       type: object
       properties:
@@ -542,18 +538,12 @@ components:
           type: number
           description: Ширина
           format: double
-        statusId:
-          type: integer
-          description: Id статуса
-          format: int64
-        cityId:
-          type: integer
-          description: ID города
-          format: int64
-        districtId:
-          type: integer
-          description: ID района
-          format: int64
+        cityName:
+          type: string
+          description: Название города
+        districtName:
+          type: string
+          description: Название района
     CardResponse:
       type: object
       properties:
@@ -591,21 +581,27 @@ components:
           type: integer
           description: Id статуса
           format: int64
-        cityId:
-          type: integer
-          description: ID города
-          format: int64
-        districtId:
-          type: integer
-          description: ID района
-          format: int64
-    ComplexityChangeRequest:
+        cityName:
+          type: string
+          description: Название города
+        districtName:
+          type: string
+          description: Название района
+    UpdateCardRequest:
       type: object
       properties:
         complexity:
           type: integer
-          description: Сложность уборки
+          description: Сложность новой уборки
           format: int32
+        statusId:
+          type: integer
+          description: Id нового статуса
+          format: int64
+        userId:
+          type: integer
+          description: Id человека
+          format: int64
     AuthorizeUserRequest:
       type: object
       properties:
