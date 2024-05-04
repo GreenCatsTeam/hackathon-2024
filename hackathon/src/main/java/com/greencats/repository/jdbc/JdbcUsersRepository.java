@@ -55,4 +55,12 @@ public class JdbcUsersRepository implements UsersRepository {
             .query(UserCredentials.class)
             .optional().orElseThrow(UserNotFoundException::new);
     }
+
+    public boolean isExistUserById(Long userId) {
+        return client.sql("SELECT EXISTS(SELECT 1 FROM users WHERE user_id = :user_id)")
+            .param("user_id", userId)
+            .query(Boolean.class)
+            .optional()
+            .orElseThrow(UserNotFoundException::new);
+    }
 }

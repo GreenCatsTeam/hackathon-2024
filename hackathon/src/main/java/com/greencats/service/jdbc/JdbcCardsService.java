@@ -39,9 +39,10 @@ public class JdbcCardsService implements CardsService {
             cardListInfo.setComplexity(cardInfo.complexity());
             cardListInfo.setLongitude(cardInfo.longitude());
             cardListInfo.setLatitude(cardInfo.latitude());
-            cardListInfo.setStatusId(cardInfo.statusId());
+            cardListInfo.setStatusId(cardInfo.maxStatus());
             cardListInfo.setCityId(cardInfo.cityId());
             cardListInfo.setDistrictId(cardInfo.districtId());
+            cardListInfos.add(cardListInfo);
         }
 
         return new ResponseEntity<>(cardListInfos, HttpStatus.OK);
@@ -51,7 +52,12 @@ public class JdbcCardsService implements CardsService {
     @Transactional
     public ResponseEntity<IdResponse> updateCard(Long id, UpdateCardRequest updateCardRequest) {
         CardEditInfo cardEditInfo =
-            new CardEditInfo(id, updateCardRequest.getComplexity(), updateCardRequest.getStatusId());
+            new CardEditInfo(
+                id,
+                updateCardRequest.getComplexity(),
+                updateCardRequest.getStatusId(),
+                updateCardRequest.getUserId()
+            );
         IdResponse idResponse = new IdResponse();
         Long cardId = cardRepository.updateCard(cardEditInfo);
         idResponse.setId(cardId);
@@ -68,7 +74,6 @@ public class JdbcCardsService implements CardsService {
             cardRequest.getPhoto(),
             cardRequest.getLatitude(),
             cardRequest.getLongitude(),
-            cardRequest.getStatusId(), // id status - created
             cardRequest.getComplexity() * 2, // points magic math
             cardRequest.getCityId(),
             cardRequest.getDistrictId()

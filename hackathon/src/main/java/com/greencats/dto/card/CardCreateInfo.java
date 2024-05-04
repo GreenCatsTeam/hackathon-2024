@@ -7,7 +7,6 @@ public record CardCreateInfo (
     String photo,
     Double longitude,
     Double latitude,
-    Long statusId,
     Integer points,
     Long cityId,
     Long districtId

@@ -1,4 +1,11 @@
 services:
+#  pictures_service:
+#    image: pictures_service:v0.4
+#    ports:
+#      - "5050:5050"
+#    volumes:
+#      - pictures_service:/var/lib/pictures_service/data
+
   postgresql:
     image: postgres:16
     ports:
@@ -28,8 +35,10 @@ services:
     networks:
       - backend
 
+
 volumes:
   postgresql: { }
+  pictures_service: { }
 
 networks:
   backend: { }
