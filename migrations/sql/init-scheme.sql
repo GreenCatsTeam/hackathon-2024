@@ -19,6 +19,8 @@ CREATE TABLE Users (
     password VARCHAR(100) NOT NULL,
     role VARCHAR(20) NOT NULL,
     organization VARCHAR(255) NULL,
+    city_id BIGINT REFERENCES City(city_id),
+    district_id BIGINT REFERENCES District(district_id),
     is_banned BOOLEAN DEFAULT FALSE
 );
 
@@ -35,8 +37,8 @@ CREATE TABLE Card (
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     points INT,
-    city_id INT REFERENCES City(city_id),
-    district_id INT REFERENCES District(district_id),
+    city_id BIGINT REFERENCES City(city_id),
+    district_id BIGINT REFERENCES District(district_id),
     is_deleted BOOLEAN DEFAULT FALSE
 );
 
@@ -74,11 +76,11 @@ INSERT INTO City (city_name) VALUES
      ('Springfield'),
      ('Riverdale');
 
-INSERT INTO Users (first_name, last_name, email, password, role, organization) VALUES
-   ('John', 'Doe', 'john.doe@example.com', 'password123', 'admin', 'Organization A'),
-   ('Jane', 'Smith', 'jane.smith@example.com', 'password123', 'user', 'Organization B'),
-   ('Jim', 'Beam', 'jim.beam@example.com', 'password123', 'user', NULL),
-   ('Jack', 'Daniels', 'jack.daniels@example.com', 'password123', 'user', 'Organization C');
+INSERT INTO Users (first_name, last_name, email, password, role, organization, city_id, district_id, is_banned) VALUES
+    ('John', 'Doe', 'john.doe@example.com', 'securepassword123', 'Admin', 'ExampleCorp', 1, 1, FALSE),
+    ('Jane', 'Smith', 'jane.smith@example.com', 'securepassword456', 'User', 'OtherCorp', 2, 2, FALSE),
+    ('Alice', 'Johnson', 'alice.johnson@example.com', 'securepassword789', 'Manager', NULL, 3, 3, FALSE),
+    ('Bob', 'Brown', 'bob.brown@example.com', 'securepassword101', 'User', 'ExampleCorp', 4, 4, TRUE);
 
 INSERT INTO Card (complexity, comment, photo, latitude, longitude, points, city_id, district_id) VALUES
      (5, 'Large area with lots of waste', 'http://example.com/photo1.jpg', 40.712776, -74.005974, 100, 1, 1),

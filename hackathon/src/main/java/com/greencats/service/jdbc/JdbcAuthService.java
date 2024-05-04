@@ -40,9 +40,26 @@ public class JdbcAuthService implements AuthService {
 
     @Override
     @Transactional
-    public ResponseEntity<JWTToken> performRegistration(String email, String password) {
+    public ResponseEntity<JWTToken> performRegistration(
+        String firstName,
+        String lastName,
+        String email,
+        String password,
+        String role,
+        String organization,
+        String cityName,
+        String districtName
+    ) {
         String encodedPassword = passwordEncoder.encode(password);
-        Long userId = authRepository.performRegistration(new AuthUserInfo(email, encodedPassword));
+        Long userId = authRepository.performRegistration(new AuthUserInfo(firstName,
+            lastName,
+            email,
+            encodedPassword,
+            role,
+            organization,
+            cityName,
+            districtName
+        ));
 
         String token = jwtUtil.generateToken(userId, email, encodedPassword);
         JWTToken jwtToken = new JWTToken();

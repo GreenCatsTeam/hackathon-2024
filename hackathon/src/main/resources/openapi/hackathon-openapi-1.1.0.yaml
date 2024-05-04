@@ -12,7 +12,49 @@ tags:
     description: Авторизация
   - name: cards
     description: Карточка
+  - name: nearCards
+    description: Ближайшие карточки пользователя
 paths:
+  /nearCards/{id}:
+    get:
+      operationId: getNearCards
+      tags:
+        - nearCards
+      parameters:
+        - name: id
+          in: path
+          description: ID пользователя
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NearCardsRequest'
+      responses:
+        "200":
+          description: Карточки успешно получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NearCardsResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+
   /cards/{id}:
     get:
       operationId: getCard
@@ -538,6 +580,49 @@ components:
           type: number
           description: Ширина
           format: double
+        cityName:
+          type: string
+          description: Название города
+        districtName:
+          type: string
+          description: Название района
+    NearCardsRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
+        cardId:
+          type: integer
+          description: ID карты
+          format: int64
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        comment:
+          type: string
+          description: Комментарий
+        photo:
+          type: string
+          description: Ссылка на фотографию
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        points:
+          type: integer
+          description: Вознаграждения
+          format: int32
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
         cityName:
           type: string
           description: Название города
