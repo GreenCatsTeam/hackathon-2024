@@ -56,8 +56,8 @@ CREATE TABLE Cleaning (
     status_id INT REFERENCES Status(status_id),
     user_id INT REFERENCES Users(user_id) NULL,
     time timestamptz,
-    admin_proof boolean,
-    count_of_proof INT
+    admin_proof boolean DEFAULT FALSE,
+    count_of_proof INT DEFAULT 0
 );
 
 -- Заполнение таблицы статусов

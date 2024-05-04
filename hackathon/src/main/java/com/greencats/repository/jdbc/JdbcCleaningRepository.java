@@ -7,6 +7,8 @@ import com.greencats.repository.CleaningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,11 +26,12 @@ public class JdbcCleaningRepository implements CleaningRepository {
             .optional().orElseThrow(CityNotFoundException::new);
 
         Long cleaningId = client.sql(
-                "INSERT INTO Cleaning(card_id, user_id, status_id)" +
-                    "VALUES(:card_id, :user_id, :status_id) RETURNING cleaning_id")
+                "INSERT INTO Cleaning(card_id, user_id, status_id, time)" +
+                    "VALUES(:card_id, :user_id, :status_id, :time) RETURNING cleaning_id")
             .param("card_id", cleaningCreateInfo.cardId())
             .param("user_id", cleaningCreateInfo.userId())
             .param("status_id", statusId)
+            .param("time", Timestamp.from(ZonedDateTime.now().toInstant()))
             .query(Long.class)
             .optional().orElseThrow(CardNotCreatedException::new);
 
