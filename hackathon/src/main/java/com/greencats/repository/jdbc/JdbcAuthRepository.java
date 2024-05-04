@@ -1,6 +1,8 @@
 package com.greencats.repository.jdbc;
 
 import com.greencats.dto.authorization.AuthUserInfo;
+import com.greencats.exception.CityNotFoundException;
+import com.greencats.exception.DistrictNotFoundException;
 import com.greencats.exception.UserAlreadyExistException;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.AuthRepository;
@@ -39,10 +41,27 @@ public class JdbcAuthRepository implements AuthRepository {
             throw new UserAlreadyExistException();
         }
 
+        Long cityId = client.sql("SELECT city.city_id FROM city WHERE city_name = :city_name")
+            .param("city_name", authUserInfo.cityName())
+            .query(Long.class)
+            .optional().orElseThrow(CityNotFoundException::new);
+
+        Long districtid = client.sql("SELECT district.district_id FROM district WHERE district_name = :district_name")
+            .param("district_name", authUserInfo.districtName())
+            .query(Long.class)
+            .optional().orElseThrow(DistrictNotFoundException::new);
+
+
         // Если пользователь не существует, выполняем вставку
-        return client.sql("INSERT INTO users (email, password) VALUES(:email, :password) RETURNING user_id")
+        return client.sql("INSERT INTO users (first_name, last_name, email, password, role, organization, city_id, district_id) VALUES(:first_name, :last_name, :email, :password, :role, :organization, :city_id, :district_id) RETURNING user_id")
+            .param("first_name", authUserInfo.firstName())
+            .param("last_name", authUserInfo.lastName())
             .param(EMAIL_FIELD, authUserInfo.email())
             .param(PASSWORD_FIELD, authUserInfo.password())
+            .param("role", authUserInfo.role())
+            .param("organization", authUserInfo.organization())
+            .param("city_id", cityId)
+            .param("district_id", districtid)
             .query(Long.class)
             .optional().orElseThrow(() -> new RuntimeException("Failed to create user for unknown reasons"));
     }

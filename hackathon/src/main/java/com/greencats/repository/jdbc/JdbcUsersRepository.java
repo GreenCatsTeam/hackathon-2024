@@ -1,13 +1,11 @@
 package com.greencats.repository.jdbc;
 
-import com.greencats.dto.authorization.AuthUserInfo;
 import com.greencats.dto.card.ShortCardInfo;
 import com.greencats.dto.security.UserCredentials;
 import com.greencats.dto.user.UserEditInfo;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.UsersRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
