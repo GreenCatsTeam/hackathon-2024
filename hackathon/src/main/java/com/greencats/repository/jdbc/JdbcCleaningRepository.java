@@ -15,9 +15,6 @@ public class JdbcCleaningRepository implements CleaningRepository {
 
     @Override
     public Long createCleaning(CleaningCreateInfo cleaningCreateInfo) {
-        // input card_id, user_id
-        // get status_id, timestamptz
-
         Long statusId = client.sql("SELECT MaxStatus.max_status FROM MaxStatus WHERE card_id = :card_id")
             .param("card_id", cleaningCreateInfo.cardId())
             .query(Long.class)
