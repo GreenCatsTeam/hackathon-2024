@@ -57,7 +57,7 @@ public class JdbcUsersRepository implements UsersRepository {
 
     @Override
     public UserCredentials findByEmail(String email) {
-        return client.sql("SELECT email, password, role, is_banned FROM users WHERE email = :email")
+        return client.sql("SELECT email, password, role FROM users WHERE email = :email")
             .param(EMAIL_FIELD, email)
             .query(UserCredentials.class)
             .optional().orElseThrow(UserNotFoundException::new);
@@ -71,19 +71,18 @@ public class JdbcUsersRepository implements UsersRepository {
             .orElseThrow(UserNotFoundException::new);
     }
 
-    @Override
-    public List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id) {
-    return client.sql(
-            "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, Card.city_id, Card.district_id " +
-                "FROM Card INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
-                "INNER JOIN Cleaning ON Card.card_id = Cleaning.card_id" +
-                "WHERE Card.is_deleted != true AND Cleaning.user_id =:id" +
-                "LIMIT :limit OFFSET :offset"
-        )
-        .param("id", id)
-        .param("limit", limit)
-        .param("offset", offset)
-        .query(ShortCardInfo.class).list();
+    @Override public List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id) {
+        return client.sql(
+                "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, city_name, district_name " +
+                    "FROM Card INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
+                    "INNER JOIN public.city c on c.city_id = Card.city_id " +
+                    "INNER JOIN public.district d on d.district_id = Card.district_id " +
+                    "INNER JOIN public.cleaning cl on cl.card_id = Card.card_id " +
+                    "WHERE Card.is_deleted != true AND cl.user_id =:id " +
+                    "LIMIT :limit OFFSET :offset").param("id", id)
+            .param("limit", limit)
+            .param("offset", offset)
+            .query(ShortCardInfo.class).list();
     }
 
     @Override
