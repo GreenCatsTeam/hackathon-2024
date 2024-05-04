@@ -30,7 +30,7 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<List<CardListInfo>> getUserCardsList(Integer limit, Integer offset, Long id) {
+    public ResponseEntity<List<CardListInfo>> getUserCardsList(Long id, Integer limit, Integer offset) {
         return usersService.getUserCardsList(limit, offset, id);
     }
 }

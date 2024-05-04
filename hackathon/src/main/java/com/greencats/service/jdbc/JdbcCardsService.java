@@ -4,22 +4,20 @@ import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
 import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
-import com.greencats.exception.WrongStatusException;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
-import com.greencats.hackathon.model.ComplexityChangeRequest;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.repository.CardRepository;
 import com.greencats.service.CardsService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

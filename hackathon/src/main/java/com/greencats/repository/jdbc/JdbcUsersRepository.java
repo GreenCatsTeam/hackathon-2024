@@ -58,23 +58,27 @@ public class JdbcUsersRepository implements UsersRepository {
             .optional().orElseThrow(UserNotFoundException::new);
     }
 
+    public boolean isExistUserById(Long userId) {
+        return client.sql("SELECT EXISTS(SELECT 1 FROM users WHERE user_id = :user_id)")
+            .param("user_id", userId)
+            .query(Boolean.class)
+            .optional()
+            .orElseThrow(UserNotFoundException::new);
+    }
+
     @Override
     public List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id) {
-        return client.sql( //TODO: change sql query
-                "SELECT c.card_id, c.complexity, c.longitude, c.latitude, c.city_id, c.district_id, cl.status_id " +
-                    "FROM card c " +
-                    "LEFT JOIN ( " +
-                    "    SELECT Cleaning.card_id, cleaning.status_id " +
-                    "    FROM Cleaning " +
-                    "    INNER JOIN ( " +
-                    "        SELECT card_id, MAX(time) AS latest_time " +
-                    "        FROM Cleaning " +
-                    "        GROUP BY card_id " +
-                    "    ) AS latest_cleaning ON cleaning.card_id = latest_cleaning.card_id AND cleaning.time = latest_cleaning.latest_time " +
-                    ") AS cl ON c.card_id = cl.card_id " +
-                    "ORDER BY c.card_id DESC " +
+        return client.sql(
+                "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, City.city_name, District.district_name " +
+                    "FROM Card " +
+                    "INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
+                    "INNER JOIN city ON Card.city_id = city.city_id " +
+                    "INNER JOIN district ON Card.district_id = district.district_id " +
+                    "INNER JOIN cleaning ON cleaning.card_id = Card.card_id " +  // Assuming cleaning relates to Card by card_id
+                    "WHERE Card.is_deleted != true AND cleaning.cleaning_id = :user_id " +  // Move user_id filtering to WHERE clause
                     "LIMIT :limit OFFSET :offset"
             )
+            .param("user_id", id)
             .param("limit", limit)
             .param("offset", offset)
             .query(ShortCardInfo.class).list();
