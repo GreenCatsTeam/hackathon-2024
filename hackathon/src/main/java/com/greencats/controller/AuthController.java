@@ -1,5 +1,6 @@
 package com.greencats.controller;
 
+import com.greencats.exception.UserBadCredentialException;
 import com.greencats.hackathon.api.AuthApi;
 import com.greencats.hackathon.model.AuthorizeUserRequest;
 import com.greencats.hackathon.model.JWTToken;
@@ -22,6 +23,9 @@ public class AuthController implements AuthApi {
 
     @Override
     public ResponseEntity<JWTToken> performRegistration(RegisterUserRequest registerUserRequest) {
+        if (registerUserRequest.getRole().equals("ADMIN")) {
+            throw new UserBadCredentialException();
+        }
         return authService.performRegistration(
             registerUserRequest.getFirstName(),
             registerUserRequest.getLastName(),

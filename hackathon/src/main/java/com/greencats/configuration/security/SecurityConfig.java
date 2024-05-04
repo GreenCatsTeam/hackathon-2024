@@ -1,4 +1,4 @@
-package com.greencats.configuration.security;//package com.greencats.configuration.security;
+package com.greencats.configuration.security;
 
 import com.greencats.configuration.security.filters.JWTFilter;
 import com.greencats.security.UserDetailsServiceImpl;
@@ -25,6 +25,7 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
                 auth -> auth
                     .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/registration").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/admin/users", "admin/users/", "/admin/userRights/").hasRole("ADMIN")
                     .anyRequest().authenticated())
             .userDetailsService(userDetailsService)
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -51,7 +52,6 @@ public class SecurityConfig {
 //    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 //        httpSecurity.csrf(AbstractHttpConfigurer::disable);
 //
-//        // Configure HTTP security to permit all requests without any authentication
 //        httpSecurity.authorizeHttpRequests(auth -> auth
 //                .anyRequest().permitAll())
 //            .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

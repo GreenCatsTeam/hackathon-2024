@@ -1,7 +1,7 @@
 package com.greencats.security;
 
-import com.greencats.dto.authorization.AuthUserInfo;
 import com.greencats.dto.security.UserCredentials;
+import com.greencats.exception.UserBannedException;
 import com.greencats.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +24,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
 
         UserCredentials authUserInfo = usersRepository.findByEmail(username);
+
+        if (authUserInfo.isBanned()) {
+            throw new UserBannedException();
+        }
 
         List<String> roles = new ArrayList<>();
         roles.add("USER"); // базовая роль
