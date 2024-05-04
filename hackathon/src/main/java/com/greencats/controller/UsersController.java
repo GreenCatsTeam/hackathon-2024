@@ -18,13 +18,11 @@ public class UsersController implements UsersApi {
     private final UsersService usersService;
 
     @Override
-    @SecurityRequirement(name = "basic")
     public ResponseEntity<IdResponse> usersIdDelete(Long id) {
         return usersService.usersIdDelete(id);
     }
 
     @Override
-    @SecurityRequirement(name = "basic")
     public ResponseEntity<IdResponse> usersIdPut(Long id, EditUserRequest editUserRequest) {
         return usersService.usersIdPut(id, editUserRequest);
     }
