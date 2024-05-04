@@ -8,10 +8,12 @@ import com.greencats.hackathon.model.RegisterUserRequest;
 import com.greencats.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class AuthController implements AuthApi {
 
     private final AuthService authService;

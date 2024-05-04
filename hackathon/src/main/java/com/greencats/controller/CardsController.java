@@ -5,6 +5,7 @@ import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.CleaningRequest;
+import com.greencats.hackathon.model.CountResponse;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.service.CardsService;
@@ -13,10 +14,12 @@ import com.greencats.service.NearCardsService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class CardsController implements CardsApi {
 
     private final CardsService cardsService;
@@ -51,8 +54,8 @@ public class CardsController implements CardsApi {
     }
 
     @Override
-    public ResponseEntity<IdResponse> approveCard(Long id, CardRequest cardRequest) {
-        return CardsApi.super.approveCard(id, cardRequest);
+    public ResponseEntity<CountResponse> approveCard(Long id) {
+        return cardsService.approveCard(id);
     }
 
     @Override
@@ -63,5 +66,10 @@ public class CardsController implements CardsApi {
     @Override
     public ResponseEntity<IdResponse> addUserToCleaning(CleaningRequest cleaningRequest) {
         return cleaningService.createCleaning(cleaningRequest);
+    }
+
+    @Override
+    public ResponseEntity<Void> adminApproveCard(Long id) {
+        return cardsService.adminApproveCard(id);
     }
 }

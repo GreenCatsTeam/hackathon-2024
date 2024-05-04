@@ -62,21 +62,21 @@ CREATE TABLE Cleaning (
 
 -- Заполнение таблицы статусов
 INSERT INTO Status (status_name)
-VALUES ('moderating'),
-       ('created'),
-       ('in process'),
-       ('being reviewed'),
-       ('closed');
+VALUES ('На модерации'),
+       ('Создана'),
+       ('В процессе уборки'),
+       ('На проверке'),
+       ('Завершена');
 
 --changeset hackathon:2
 INSERT INTO District (district_name)
-VALUES ('North District'),
+VALUES ('Кировский район'),
        ('South District'),
        ('East District'),
        ('West District');
 
 INSERT INTO City (city_name)
-VALUES ('Metropolis'),
+VALUES ('Саратов'),
        ('Gotham'),
        ('Springfield'),
        ('Riverdale');

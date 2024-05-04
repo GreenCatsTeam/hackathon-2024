@@ -1,6 +1,8 @@
 package com.greencats.service.jdbc;
 
 import com.greencats.dto.admin.UserInfo;
+import com.greencats.exception.RoleNotFoundException;
+import com.greencats.hackathon.api.AdminApi;
 import com.greencats.hackathon.model.UserInfoForAdminPanel;
 import com.greencats.repository.AdminRepository;
 import com.greencats.service.AdminService;
@@ -23,7 +25,6 @@ public class JdbcAdminService implements AdminService {
     public ResponseEntity<List<UserInfoForAdminPanel>> adminUsersGet(Integer limit, Integer offset) {
         List<UserInfo> users = adminRepository.adminUsersGet(limit, offset);
 
-
         List<UserInfoForAdminPanel> usersInfoForAdminPanel = new ArrayList<>();
         for (UserInfo user : users) {
             UserInfoForAdminPanel userForAnswer = new UserInfoForAdminPanel();
@@ -42,5 +43,14 @@ public class JdbcAdminService implements AdminService {
     public ResponseEntity<Void> adminBanUser(Long id) {
         adminRepository.adminBanUser(id);
         return new ResponseEntity<>(null, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> changeUserRights(Long id, String role) {
+        if (role.equals("USER") || role.equals("ADMIN")) {
+            adminRepository.changeUserRights(id, role);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+        throw new RoleNotFoundException();
     }
 }

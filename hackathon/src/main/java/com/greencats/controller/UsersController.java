@@ -9,9 +9,11 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class UsersController implements UsersApi {
 
     private final UsersService usersService;

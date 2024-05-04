@@ -36,21 +36,15 @@ public class JdbcAdminRepository implements AdminRepository {
         }
     }
 
+    @Override
+    public void changeUserRights(Long id, String role) {
+        int updatedRows = jdbcClient.sql("UPDATE Users SET role = :role WHERE user_id = :user_id")
+            .param("user_id", id)
+            .param("role", role)
+            .update();
+
+        if (updatedRows == 0) {
+            throw new UserNotFoundException();
+        }
+    }
 }
-
-//Long userId,
-//String firstName,
-//String lastName,
-//String email,
-//String role,
-//Integer cityId,
-//Integer districtId,
-//Boolean isBanned
-
-//user_id      BIGSERIAL PRIMARY KEY,
-//first_name   VARCHAR(100) NOT NULL,
-//last_name    VARCHAR(100) NOT NULL,
-//email        VARCHAR(255) NOT NULL,
-//password     VARCHAR(100) NOT NULL,
-//role         VARCHAR(20)  NOT NULL,
-//organization VARCHAR(255) NULL

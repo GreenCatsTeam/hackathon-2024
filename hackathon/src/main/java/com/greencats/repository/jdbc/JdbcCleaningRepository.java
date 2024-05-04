@@ -2,16 +2,13 @@ package com.greencats.repository.jdbc;
 
 import com.greencats.dto.cleaning.CleaningCreateInfo;
 import com.greencats.dto.cleaning.CleaningInfo;
-import com.greencats.exception.CardNotCreatedException;
 import com.greencats.exception.CardNotFoundException;
-import com.greencats.exception.CityNotFoundException;
-import com.greencats.exception.CleaningNotFoundException;
 import com.greencats.repository.CleaningRepository;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 
 @Repository
 @RequiredArgsConstructor

@@ -206,6 +206,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
+  /cards/admin/approve/{id}:
+    post:
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      operationId: adminApproveCard
+      tags:
+        - cards
+      summary: Апрувнуть карточку админом (пройти модерацию)
+      responses:
+        "200":
+          description: Карточка получена успешна
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
   /cards/approve/{id}:
     post:
       parameters:
@@ -222,19 +253,13 @@ paths:
       tags:
         - cards
       summary: Апрувнуть карточку
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CardRequest'
-        required: true
       responses:
         "200":
           description: Карточка получена успешна
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: '#/components/schemas/CountResponse'
         "400":
           description: Некорректные параметры запроса
           content:
@@ -389,8 +414,7 @@ paths:
           description: Роль пользователя
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       tags:
         - admin
       summary: Изменить права пользователя
@@ -706,13 +730,13 @@ components:
           type: integer
           description: Id пользователя
           format: int64
-    CleaningResponse:
+    CountResponse:
       type: object
       properties:
-        cleaningId:
+        count:
           type: integer
-          description: Id cleaning
-          format: int64
+          description: Количество апрувов
+          format: int32
     CardResponse:
       type: object
       properties:

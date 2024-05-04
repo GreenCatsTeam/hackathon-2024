@@ -6,10 +6,12 @@ import com.greencats.service.AdminService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class AdminController implements AdminApi {
 
     private final AdminService adminService;
@@ -25,7 +27,7 @@ public class AdminController implements AdminApi {
     }
 
     @Override
-    public ResponseEntity<Void> changeUserRights(Long id, Long role) {
-        return AdminApi.super.changeUserRights(id, role);
+    public ResponseEntity<Void> changeUserRights(Long id, String role) {
+        return adminService.changeUserRights(id, role);
     }
 }
