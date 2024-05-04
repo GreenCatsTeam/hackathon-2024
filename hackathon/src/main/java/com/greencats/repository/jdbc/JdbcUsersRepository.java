@@ -22,7 +22,7 @@ public class JdbcUsersRepository implements UsersRepository {
 
     @Override
     public Long usersIdDelete(Long id) {
-        int affectedRows = client.sql("DELETE FROM users WHERE user_id = :id")
+        int affectedRows = client.sql("UPDATE users SET is_deleted = TRUE WHERE user_id = :id")
             .param("id", id)
             .update();
 
@@ -80,5 +80,15 @@ public class JdbcUsersRepository implements UsersRepository {
             .param("limit", limit)
             .param("offset", offset)
             .query(ShortCardInfo.class).list();
+    }
+
+    @Override
+    public Boolean isBanned(Long id) {
+        Object result = client.sql("SELECT is_banned FROM Users WHERE user_id = :id")
+            .param("id", id)
+            .query()
+            .rowSet().first();
+
+        return result != null && (Boolean) result;
     }
 }
