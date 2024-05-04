@@ -19,7 +19,8 @@ CREATE TABLE Users (
     password VARCHAR(100) NOT NULL,
     role VARCHAR(20) NOT NULL,
     organization VARCHAR(255) NULL,
-    is_banned BOOLEAN DEFAULT FALSE
+    is_banned BOOLEAN DEFAULT FALSE,
+    is_deleted BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE Status (
