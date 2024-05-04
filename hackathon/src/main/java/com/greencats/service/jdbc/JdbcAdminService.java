@@ -3,15 +3,14 @@ package com.greencats.service.jdbc;
 import com.greencats.dto.admin.UserInfo;
 import com.greencats.hackathon.model.UserInfoForAdminPanel;
 import com.greencats.repository.AdminRepository;
-import com.greencats.repository.UsersRepository;
 import com.greencats.service.AdminService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

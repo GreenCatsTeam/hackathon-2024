@@ -1,6 +1,5 @@
 package com.greencats.service.jdbc;
 
-import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.cleaning.CleaningCreateInfo;
 import com.greencats.hackathon.model.CleaningRequest;
 import com.greencats.hackathon.model.IdResponse;

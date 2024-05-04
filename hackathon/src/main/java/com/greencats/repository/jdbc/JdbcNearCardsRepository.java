@@ -1,6 +1,5 @@
 package com.greencats.repository.jdbc;
 
-import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.nearcards.Coordinates;
 import com.greencats.repository.NearCardsRepository;
 import java.util.List;

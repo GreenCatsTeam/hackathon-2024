@@ -5,11 +5,10 @@ import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.EditUserRequest;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.service.UsersService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

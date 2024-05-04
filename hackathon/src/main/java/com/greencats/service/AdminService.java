@@ -1,8 +1,8 @@
 package com.greencats.service;
 
 import com.greencats.hackathon.model.UserInfoForAdminPanel;
-import org.springframework.http.ResponseEntity;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface AdminService {
 

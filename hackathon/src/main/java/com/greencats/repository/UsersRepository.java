@@ -1,11 +1,9 @@
 package com.greencats.repository;
 
-import com.greencats.dto.authorization.AuthUserInfo;
 import com.greencats.dto.card.ShortCardInfo;
 import com.greencats.dto.security.UserCredentials;
 import com.greencats.dto.user.UserEditInfo;
 import java.util.List;
-import java.util.Optional;
 
 public interface UsersRepository {
 

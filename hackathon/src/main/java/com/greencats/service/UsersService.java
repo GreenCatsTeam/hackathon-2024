@@ -3,8 +3,8 @@ package com.greencats.service;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.EditUserRequest;
 import com.greencats.hackathon.model.IdResponse;
-import org.springframework.http.ResponseEntity;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 public interface UsersService {
 

@@ -7,8 +7,6 @@ import com.greencats.repository.CleaningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 
 @Repository
 @RequiredArgsConstructor

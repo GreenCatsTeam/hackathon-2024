@@ -12,19 +12,15 @@ tags:
     description: Авторизация
   - name: cards
     description: Карточка
-  - name: cleaning
-    description: Cleaning
-
-    ###### Связывание карточки с пользователем
   - name: admin
     description: Работа с админкой
 paths:
-  /cleaning/:
+  /cards/addUserToCleaning:
     post:
-      operationId: createCleaning
+      operationId: addUserToCleaning
       tags:
-        - cleaning
-      summary: Создать Cleaning
+        - cards
+      summary: Добавить человеку карточку
       requestBody:
         content:
           application/json:
@@ -33,7 +29,7 @@ paths:
         required: true
       responses:
         "200":
-          description: Cleaning успешно добавлена
+          description: Уборка успешно добавлена
           content:
             application/json:
               schema:
@@ -45,15 +41,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
         "404":
-          description: Cleaning с указанным ID не найден
+          description: Уборка с указанным ID не найден
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
-      security:
-        - basicAuth: [ ]
-
-      ########################################
   /cards/nearCards:
     get:
       operationId: getNearCards
@@ -703,7 +695,6 @@ components:
         districtName:
           type: string
           description: Название района
-
     CleaningRequest:
       type: object
       properties:
@@ -715,9 +706,6 @@ components:
           type: integer
           description: Id пользователя
           format: int64
-
-
-        ################## Ответ связывания карточки с пользователем
     CleaningResponse:
       type: object
       properties:
@@ -725,8 +713,6 @@ components:
           type: integer
           description: Id cleaning
           format: int64
-        ##################
-
     CardResponse:
       type: object
       properties:

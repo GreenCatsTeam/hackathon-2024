@@ -4,14 +4,16 @@ import com.greencats.hackathon.api.CardsApi;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
+import com.greencats.hackathon.model.CleaningRequest;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.service.CardsService;
+import com.greencats.service.CleaningService;
 import com.greencats.service.NearCardsService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +22,8 @@ public class CardsController implements CardsApi {
     private final CardsService cardsService;
 
     private final NearCardsService nearCardsService;
+
+    private final CleaningService cleaningService;
 
     @Override
     public ResponseEntity<List<CardListInfo>> getListCards(Integer limit, Integer offset) {
@@ -54,5 +58,10 @@ public class CardsController implements CardsApi {
     @Override
     public ResponseEntity<List<IdResponse>> getNearCards(Double x1, Double y1, Double x2, Double y2) {
         return nearCardsService.getNearCards(x1, y1, x2, y2);
+    }
+
+    @Override
+    public ResponseEntity<IdResponse> addUserToCleaning(CleaningRequest cleaningRequest) {
+        return cleaningService.createCleaning(cleaningRequest);
     }
 }

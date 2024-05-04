@@ -5,7 +5,6 @@ import com.greencats.dto.card.CardEditInfo;
 import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
 import java.util.List;
-import java.util.Optional;
 
 public interface CardRepository {
     Long createCard(CardCreateInfo cardCreateInfo);
