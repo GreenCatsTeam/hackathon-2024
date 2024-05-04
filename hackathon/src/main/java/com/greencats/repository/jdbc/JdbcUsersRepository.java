@@ -1,13 +1,12 @@
 package com.greencats.repository.jdbc;
 
-import java.util.Optional;
-import com.greencats.exception.UserNotFoundException;
-import lombok.RequiredArgsConstructor;
-import com.greencats.dto.user.UserCreateInfo;
+import com.greencats.dto.card.ShortCardInfo;
+import com.greencats.dto.security.UserCredentials;
 import com.greencats.dto.user.UserEditInfo;
-import com.greencats.dto.user.UserInfo;
-import com.greencats.exception.UserAlreadyExistException;
+import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.UsersRepository;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +18,8 @@ public class JdbcUsersRepository implements UsersRepository {
 
     private static final String EMAIL_FIELD = "email";
 
+    private static final String PASSWORD_FIELD = "password";
+
     @Override
     public Long usersIdDelete(Long id) {
         int affectedRows = client.sql("DELETE FROM users WHERE user_id = :id")
@@ -26,7 +27,7 @@ public class JdbcUsersRepository implements UsersRepository {
             .update();
 
         if (affectedRows == 0) {
-            throw new UserNotFoundException(id);
+            throw new UserNotFoundException();
         }
 
         return id;
@@ -35,32 +36,49 @@ public class JdbcUsersRepository implements UsersRepository {
     @Override
     public Long usersIdPut(Long id, UserEditInfo userEditInfo) {
         int affectedRows = client.sql("UPDATE users SET email = :email, password = :password WHERE user_id = :id")
-            .param("email", userEditInfo.email())
-            .param("password", userEditInfo.password())
+            .param(EMAIL_FIELD, userEditInfo.email())
+            .param(PASSWORD_FIELD, userEditInfo.password())
             .param("id", id)
             .update();
 
         if (affectedRows == 0) {
-            throw new UserNotFoundException(id);
+            throw new UserNotFoundException();
         }
 
         return id;
     }
 
     @Override
-    public Long usersPost(UserCreateInfo userCreateInfo) throws UserAlreadyExistException {
-        return client.sql("INSERT INTO users (email, password) VALUES(:email, :password) RETURNING user_id")
-            .param(EMAIL_FIELD, userCreateInfo.email())
-            .param("password", userCreateInfo.password())
-            .query(Long.class)
-            .optional().orElseThrow(UserAlreadyExistException::new);
+    public UserCredentials findByEmail(String email) {
+        return client.sql("SELECT email, password, role FROM users WHERE email = :email")
+            .param(EMAIL_FIELD, email)
+            .query(UserCredentials.class)
+            .optional().orElseThrow(UserNotFoundException::new);
+    }
+
+    public boolean isExistUserById(Long userId) {
+        return client.sql("SELECT EXISTS(SELECT 1 FROM users WHERE user_id = :user_id)")
+            .param("user_id", userId)
+            .query(Boolean.class)
+            .optional()
+            .orElseThrow(UserNotFoundException::new);
     }
 
     @Override
-    public Optional<UserInfo> findByEmail(String email) {
-        return client.sql("SELECT email, password FROM users WHERE email = :email")
-            .param(EMAIL_FIELD, email)
-            .query(UserInfo.class)
-            .optional();
+    public List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id) {
+        return client.sql(
+                "SELECT Card.card_id, Card.complexity, Card.longitude, Card.latitude, m.max_status, City.city_name, District.district_name " +
+                    "FROM Card " +
+                    "INNER JOIN maxstatus m ON Card.card_id = m.card_id " +
+                    "INNER JOIN city ON Card.city_id = city.city_id " +
+                    "INNER JOIN district ON Card.district_id = district.district_id " +
+                    "INNER JOIN cleaning ON cleaning.card_id = Card.card_id " +  // Assuming cleaning relates to Card by card_id
+                    "WHERE Card.is_deleted != true AND cleaning.cleaning_id = :user_id " +  // Move user_id filtering to WHERE clause
+                    "LIMIT :limit OFFSET :offset"
+            )
+            .param("user_id", id)
+            .param("limit", limit)
+            .param("offset", offset)
+            .query(ShortCardInfo.class).list();
     }
 }

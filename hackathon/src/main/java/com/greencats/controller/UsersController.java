@@ -1,14 +1,15 @@
 package com.greencats.controller;
 
 import com.greencats.hackathon.api.UsersApi;
-import com.greencats.hackathon.model.CreateUserRequest;
+import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.EditUserRequest;
 import com.greencats.hackathon.model.IdResponse;
+import com.greencats.service.UsersService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import com.greencats.service.UsersService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class UsersController implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<IdResponse> usersPost(CreateUserRequest createUserRequest) {
-        return usersService.usersPost(createUserRequest);
+    public ResponseEntity<List<CardListInfo>> getUserCardsList(Long id, Integer limit, Integer offset) {
+        return usersService.getUserCardsList(limit, offset, id);
     }
 }

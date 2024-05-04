@@ -1,0 +1,601 @@
+openapi: 3.0.3
+info:
+  title: Hackathon API
+  description: "API для "
+  version: 1.0.1
+servers:
+  - url: https://greencats.com/
+tags:
+  - name: users
+    description: Работа с пользователями
+  - name: authorization
+    description: Авторизация
+  - name: cards
+    description: Карточка
+paths:
+  /cards/{id}:
+    get:
+      operationId: getCard
+      tags:
+        - cards
+      summary: Получить карточку
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Карточка получена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+    put:
+      operationId: changeCardComplexity
+      tags:
+        - cards
+      summary: Изменить сложность карточки
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComplexityChangeRequest'
+        required: true
+      responses:
+        "200":
+          description: Карточка изменена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+    delete:
+      operationId: deleteCard
+      tags:
+        - cards
+      summary: Удалить карточку
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Карточка успешна удалена
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+  /cards/:
+    post:
+      operationId: createCard
+      tags:
+        - cards
+      summary: Создать карточку
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardRequest'
+        required: true
+      responses:
+        "200":
+          description: Карточка получена успешна
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+    get:
+      tags:
+        - cards
+      operationId: getListCards
+      summary: Получить список карточек
+      description: Возвращает список карточек со смещением offset и количеством limit
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 30
+            minimum: 1
+            maximum: 100
+          description: Количество возвращаемых карточек
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Смещение по количеству карточек
+      responses:
+        '200':
+          description: Получен смещенный список карточек
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardListInfo'
+  /admin/users:
+    get:
+      tags:
+        - users
+      summary: Получить список пользователей
+      description: Возвращает список пользователей со смещением offset и количеством limit
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+          description: Количество возвращаемых пользователей
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Смещение по количеству пользователей
+      responses:
+        '200':
+          description: Получен смещенный список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserInfoForAdminPanel'
+  /auth/registration:
+    post:
+      operationId: performRegistration
+      tags:
+        - authorization
+      summary: Регистрация пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+        required: true
+      responses:
+        "200":
+          description: Пользователь создан успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTToken'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "409":
+          description: Пользователь с таким email уже зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /auth/login:
+    post:
+      operationId: performLogin
+      tags:
+        - authorization
+      summary: Авторизация пользователя
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeUserRequest'
+        required: true
+      responses:
+        "200":
+          description: Пользователь авторизован успешно
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTToken'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Пользователь с такими данными не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /users/{id}:
+    put:
+      tags:
+        - users
+      summary: Редактировать пользователя
+      parameters:
+        - name: id
+          in: path
+          description: ID профиля
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserRequest'
+        required: true
+      responses:
+        "200":
+          description: Данные пользователя успешно обновлены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Профиль с указанным ID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: [ ]
+    delete:
+      tags:
+        - users
+      summary: Удаление пользователя
+      parameters:
+        - name: id
+          in: path
+          description: "ID пользователя, который удаляется"
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: Пользователя успешно удален
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdResponse'
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Пользователь с указанным ID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      security:
+        - basicAuth: []
+components:
+  schemas:
+    RegisterUserRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: Имя
+        lastName:
+          type: string
+          description: Фамилия
+        email:
+          type: string
+          description: Email
+        password:
+          type: string
+          description: Пароль пользователя
+        role:
+          type: string
+          description: Роль пользователя
+        organization:
+          type: string
+          description: Организация
+        cityId:
+          type: integer
+          description: Id города
+          format: int32
+        districtId:
+          type: integer
+          description: Id района
+          format: int32
+    CardListInfo:
+      type: object
+      properties:
+        cardId:
+          type: integer
+          description: Id карточки
+          format: int64
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
+        cityId:
+          type: integer
+          description: ID города
+          format: int32
+        districtId:
+          type: integer
+          description: ID района
+          format: int32
+    UserInfoForAdminPanel:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
+        firstName:
+          type: string
+          description: Имя
+        lastName:
+          type: string
+          description: Фамилия
+        email:
+          type: string
+          description: Email
+        role:
+          type: string
+          description: Роль пользователя
+        cityId:
+          type: integer
+          description: Id города
+          format: int32
+        districtId:
+          type: integer
+          description: Id района
+          format: int32
+        isBanned:
+          type: boolean
+          description: Забанен ли пользователь
+    CardRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        comment:
+          type: string
+          description: Комментарий
+        photo:
+          type: string
+          description: Фотка в виде массива байт, закодированного в base64
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
+        cityId:
+          type: integer
+          description: ID города
+          format: int32
+        districtId:
+          type: integer
+          description: ID района
+          format: int32
+    CardResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: Id пользователя
+          format: int64
+        cardId:
+          type: integer
+          description: ID карты
+          format: int64
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+        comment:
+          type: string
+          description: Комментарий
+        photo:
+          type: string
+          description: Ссылка на фотографию
+        longitude:
+          type: number
+          description: Долгота
+          format: double
+        latitude:
+          type: number
+          description: Ширина
+          format: double
+        points:
+          type: integer
+          description: Вознаграждения
+          format: int32
+        statusId:
+          type: integer
+          description: Id статуса
+          format: int64
+        cityId:
+          type: integer
+          description: ID города
+          format: int32
+        districtId:
+          type: integer
+          description: ID района
+          format: int32
+    ComplexityChangeRequest:
+      type: object
+      properties:
+        complexity:
+          type: integer
+          description: Сложность уборки
+          format: int32
+    AuthorizeUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email
+        password:
+          type: string
+          description: Пароль пользователя
+    EditUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email
+        password:
+          type: string
+          description: Пароль пользователя
+    IdResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID пользователя
+          format: int64
+    JWTToken:
+      type: object
+      properties:
+        jwtToken:
+          type: string
+          description: JWT токен пользователя
+    NewPasswordRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID пользователя
+          format: int64
+        new_password:
+          type: string
+          description: Новый пароль
+    ApiErrorResponse:
+      type: object
+      properties:
+        description:
+          type: string
+        code:
+          type: string
+        exceptionName:
+          type: string
+        exceptionMessage:
+          type: string
+        stacktrace:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
