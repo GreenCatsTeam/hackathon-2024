@@ -222,19 +222,13 @@ paths:
       tags:
         - cards
       summary: Апрувнуть карточку
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CardRequest'
-        required: true
       responses:
         "200":
           description: Карточка получена успешна
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IdResponse'
+                $ref: '#/components/schemas/CountResponse'
         "400":
           description: Некорректные параметры запроса
           content:
@@ -705,13 +699,13 @@ components:
           type: integer
           description: Id пользователя
           format: int64
-    CleaningResponse:
+    CountResponse:
       type: object
       properties:
-        cleaningId:
+        count:
           type: integer
-          description: Id cleaning
-          format: int64
+          description: Количество апрувов
+          format: int32
     CardResponse:
       type: object
       properties:

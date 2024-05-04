@@ -62,8 +62,8 @@ CREATE TABLE Cleaning
     status_id      INT REFERENCES Status (status_id),
     user_id        INT REFERENCES Users (user_id) NULL,
     time           timestamptz,
-    admin_proof    boolean,
-    count_of_proof INT
+    admin_proof    boolean DEFAULT FALSE,
+    count_of_proof INT DEFAULT 0
 );
 
 -- Заполнение таблицы статусов
@@ -76,13 +76,13 @@ VALUES ('moderating'),
 
 --changeset hackathon:2
 INSERT INTO District (district_name)
-VALUES ('North District'),
+VALUES ('Кировский район'),
        ('South District'),
        ('East District'),
        ('West District');
 
 INSERT INTO City (city_name)
-VALUES ('Metropolis'),
+VALUES ('Саратов'),
        ('Gotham'),
        ('Springfield'),
        ('Riverdale');
@@ -94,11 +94,11 @@ VALUES ('John', 'Doe', 'john.doe@example.com', 'securepassword123', 'Admin', 'Ex
        ('Bob', 'Brown', 'bob.brown@example.com', 'securepassword101', 'User', 'ExampleCorp', 4, 4, TRUE);
 
 INSERT INTO Card (complexity, comment, photo, latitude, longitude, points, city_id, district_id)
-VALUES (5, 'Large area with lots of waste', 'http://example.com/photo1.jpg', 40.712776, -74.005974, 100, 1, 1),
-       (3, 'Small cleanup needed', 'http://example.com/photo2.jpg', 34.052235, -118.243683, 50, 2, 2),
-       (2, 'Moderate maintenance', 'http://example.com/photo3.jpg', 41.878113, -87.629799, 75, 3, 3),
-       (4, 'Urgent attention needed', 'http://example.com/photo4.jpg', 37.774929, -122.419416, 150, 4, 4),
-       (2, 'Urgent attention needed2', 'http://example.com/photo44.jpg', 37.724929, -122.449416, 150, 4, 4);
+VALUES (5, 'Large area with lots of waste', 'http://example.com/photo1.jpg', 51.522880, 46.020296, 100, 1, 1),
+       (3, 'Small cleanup needed', 'http://example.com/photo2.jpg', 51.522873, 46.018126, 50, 2, 2),
+       (2, 'Moderate maintenance', 'http://example.com/photo3.jpg', 51.522542, 46.020968, 75, 3, 3),
+       (4, 'Urgent attention needed', 'http://example.com/photo4.jpg', 51.523477, 46.021631, 150, 4, 4),
+       (2, 'Urgent attention needed2', 'http://example.com/photo44.jpg', 51.522415, 46.020017, 150, 4, 4);
 
 INSERT INTO MaxStatus(card_id, max_status, max_count_of_proof)
 VALUES (1, 1, 0),

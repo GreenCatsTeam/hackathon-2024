@@ -4,11 +4,13 @@ import com.greencats.dto.card.CardCreateInfo;
 import com.greencats.dto.card.CardEditInfo;
 import com.greencats.dto.card.CardInfo;
 import com.greencats.dto.card.ShortCardInfo;
+import com.greencats.dto.cleaning.CleaningInfo;
 import com.greencats.exception.CardNotCreatedException;
 import com.greencats.exception.CardNotFoundException;
 import com.greencats.exception.CityNotFoundException;
 import com.greencats.exception.DistrictNotFoundException;
 import com.greencats.exception.WrongStatusException;
+import com.greencats.exception.WrongStatusToUpdateCountOfProof;
 import com.greencats.repository.CardRepository;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -20,10 +22,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class JdbcCardRepository implements CardRepository {
+
     private final JdbcClient client;
 
     private final JdbcUsersRepository usersRepository;
-    private static final String COMPLEXITY_FIELD = "complexity";
+
+    private final static int MAX_APPROVES = 3;
 
     @Override
     public Long createCard(CardCreateInfo cardCreateInfo) {
@@ -148,5 +152,41 @@ public class JdbcCardRepository implements CardRepository {
             .param("limit", limit)
             .param("offset", offset)
             .query(ShortCardInfo.class).list();
+    }
+
+    @Override
+    public Integer approveCard(Long id) {
+        CleaningInfo lastCard = client.sql(
+                "SELECT cleaning_id, card_id, status_id, user_id, time, admin_proof, count_of_proof FROM cleaning " +
+                    "WHERE card_id = :card_id ORDER BY time DESC LIMIT 1")
+            .param("card_id", id)
+            .query(CleaningInfo.class).optional().orElseThrow(CardNotFoundException::new);
+
+        if (lastCard.statusId() == 4) {
+            if (lastCard.countOfProof() + 1 == MAX_APPROVES) {
+                client.sql("INSERT INTO cleaning(card_id, status_id, user_id, time, admin_proof, count_of_proof) " +
+                        "VALUES (:card_id, :status_id, :user_id, :time, :admin_proof, :count_of_proof) ")
+                    .param("card_id", id)
+                    .param("status_id", lastCard.statusId() + 1)
+                    .param("user_id", lastCard.userId())
+                    .param("time", Timestamp.from(ZonedDateTime.now().toInstant()))
+                    .param("admin_proof", lastCard.adminProof())
+                    .param("count_of_proof", lastCard.countOfProof() + 1)
+                    .update();
+            } else {
+                client.sql("INSERT INTO cleaning(card_id, status_id, user_id, time, admin_proof, count_of_proof) " +
+                        "VALUES (:card_id, :status_id, :user_id, :time, :admin_proof, :count_of_proof) ")
+                    .param("card_id", id)
+                    .param("status_id", lastCard.statusId())
+                    .param("user_id", lastCard.userId())
+                    .param("time", Timestamp.from(ZonedDateTime.now().toInstant()))
+                    .param("admin_proof", lastCard.adminProof())
+                    .param("count_of_proof", lastCard.countOfProof() + 1)
+                    .update();
+            }
+            return lastCard.countOfProof() + 1;
+        }
+
+        throw new WrongStatusToUpdateCountOfProof();
     }
 }

@@ -7,9 +7,11 @@ import com.greencats.dto.card.ShortCardInfo;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
+import com.greencats.hackathon.model.CountResponse;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.repository.CardRepository;
+import com.greencats.repository.jdbc.JdbcCardRepository;
 import com.greencats.service.CardsService;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JdbcCardsService implements CardsService {
 
     private final CardRepository cardRepository;
+    private final JdbcCardRepository jdbcCardRepository;
 
     @Override
     @Transactional
@@ -108,5 +111,11 @@ public class JdbcCardsService implements CardsService {
         cardResponse.setCityName(cardInfo.cityName());
         cardResponse.setDistrictName(cardInfo.districtName());
         return new ResponseEntity<>(cardResponse, HttpStatus.OK);
+    }
+
+    public ResponseEntity<CountResponse> approveCard(Long id) {
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(jdbcCardRepository.approveCard(id));
+        return new ResponseEntity<>(countResponse, HttpStatus.OK);
     }
 }

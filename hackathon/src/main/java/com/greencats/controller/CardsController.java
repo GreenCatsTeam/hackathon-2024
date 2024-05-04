@@ -5,6 +5,7 @@ import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
 import com.greencats.hackathon.model.CleaningRequest;
+import com.greencats.hackathon.model.CountResponse;
 import com.greencats.hackathon.model.IdResponse;
 import com.greencats.hackathon.model.UpdateCardRequest;
 import com.greencats.service.CardsService;
@@ -53,8 +54,8 @@ public class CardsController implements CardsApi {
     }
 
     @Override
-    public ResponseEntity<IdResponse> approveCard(Long id, CardRequest cardRequest) {
-        return CardsApi.super.approveCard(id, cardRequest);
+    public ResponseEntity<CountResponse> approveCard(Long id) {
+        return cardsService.approveCard(id);
     }
 
     @Override
