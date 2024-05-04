@@ -614,12 +614,24 @@ components:
     EditUserRequest:
       type: object
       properties:
+        first_name:
+          type: string
+          description: Имя пользователя
+        last_name:
+          type: string
+          description: Фамилия пользователя
         email:
           type: string
           description: Email
         password:
           type: string
           description: Пароль пользователя
+        role:
+          type: string
+          description: Роль пользователя
+        organization:
+          type: string
+          description: Организация пользователя
     IdResponse:
       type: object
       properties:

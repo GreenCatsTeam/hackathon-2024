@@ -36,7 +36,9 @@ public class JdbcUsersService implements UsersService {
         IdResponse idResponse = new IdResponse();
         idResponse.setId(usersRepository.usersIdPut(
             id,
-            new UserEditInfo(editUserRequest.getEmail(), editUserRequest.getPassword())
+            new UserEditInfo(editUserRequest.getFirstName(),
+                editUserRequest.getLastName(), editUserRequest.getEmail(), editUserRequest.getPassword(),
+                editUserRequest.getRole(), editUserRequest.getOrganization())
         ));
 
         return new ResponseEntity<>(idResponse, HttpStatus.OK);
