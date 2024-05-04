@@ -391,6 +391,48 @@ paths:
                 $ref: '#/components/schemas/ApiErrorResponse'
       security:
         - basicAuth: []
+    get:
+      tags:
+        - users
+      operationId: getUserCardsList
+      summary: Получить список карточек
+      description: Возвращает список карточек со смещением offset и количеством limit
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 30
+            minimum: 1
+            maximum: 100
+          description: Количество возвращаемых карточек
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+            minimum: 0
+          description: Смещение по количеству карточек
+        - name: id
+          in: path
+          description: "ID пользователя, карточки которого получаем"
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Получен смещенный список карточек пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardListInfo'
+      security:
+        - basicAuth: [ ]
 components:
   schemas:
     RegisterUserRequest:

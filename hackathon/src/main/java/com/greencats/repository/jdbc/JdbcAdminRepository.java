@@ -1,6 +1,8 @@
 package com.greencats.repository.jdbc;
 
 import com.greencats.dto.admin.UserInfo;
+import com.greencats.exception.CardNotFoundException;
+import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -23,6 +25,18 @@ public class JdbcAdminRepository implements AdminRepository {
             .param("offset", offset)
             .query(UserInfo.class).list();
     }
+
+    @Override
+    public void adminBanUser(Long id) {
+        int updatedRows = jdbcClient.sql("UPDATE Users SET is_banned = TRUE WHERE user_id = :user_id")
+            .param("user_id", id)
+            .update();
+
+        if (updatedRows == 0) {
+            throw new UserNotFoundException();
+        }
+    }
+
 }
 
 //Long userId,
