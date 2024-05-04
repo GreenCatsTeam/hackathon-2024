@@ -10,6 +10,7 @@ import com.greencats.exception.CardNotFoundException;
 import com.greencats.exception.CityNotFoundException;
 import com.greencats.exception.DistrictNotFoundException;
 import com.greencats.exception.WrongStatusException;
+import com.greencats.exception.WrongStatusToAdminProof;
 import com.greencats.exception.WrongStatusToUpdateCountOfProof;
 import com.greencats.repository.CardRepository;
 import java.sql.Timestamp;
@@ -156,11 +157,7 @@ public class JdbcCardRepository implements CardRepository {
 
     @Override
     public Integer approveCard(Long id) {
-        CleaningInfo lastCard = client.sql(
-                "SELECT cleaning_id, card_id, status_id, user_id, time, admin_proof, count_of_proof FROM cleaning " +
-                    "WHERE card_id = :card_id ORDER BY time DESC LIMIT 1")
-            .param("card_id", id)
-            .query(CleaningInfo.class).optional().orElseThrow(CardNotFoundException::new);
+        CleaningInfo lastCard = getLastCard(id);
 
         if (lastCard.statusId() == 4) {
             if (lastCard.countOfProof() + 1 == MAX_APPROVES) {
@@ -188,5 +185,31 @@ public class JdbcCardRepository implements CardRepository {
         }
 
         throw new WrongStatusToUpdateCountOfProof();
+    }
+
+    @Override
+    public void adminApproveCard(Long id) {
+        CleaningInfo lastCard = getLastCard(id);
+        if (lastCard.statusId() == 1) {
+            client.sql("INSERT INTO cleaning(card_id, status_id, user_id, time, admin_proof, count_of_proof) " +
+                "VALUES(:card_id, :status_id, :user_id, :time, :admin_proof, :count_of_proof)")
+                .param("card_id", lastCard.cardId())
+                .param("status_id", 2)
+                .param("user_id", lastCard.userId())
+                .param("time", Timestamp.from(ZonedDateTime.now().toInstant()))
+                .param("admin_proof", true)
+                .param("count_of_proof", lastCard.countOfProof())
+                .update();
+        }
+
+        throw new WrongStatusToAdminProof();
+    }
+
+    private CleaningInfo getLastCard(Long id) {
+        return client.sql(
+                "SELECT cleaning_id, card_id, status_id, user_id, time, admin_proof, count_of_proof FROM cleaning " +
+                    "WHERE card_id = :card_id ORDER BY time DESC LIMIT 1")
+            .param("card_id", id)
+            .query(CleaningInfo.class).optional().orElseThrow(CardNotFoundException::new);
     }
 }

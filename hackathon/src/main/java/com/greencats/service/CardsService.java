@@ -1,5 +1,6 @@
 package com.greencats.service;
 
+import com.greencats.hackathon.api.CardsApi;
 import com.greencats.hackathon.model.CardListInfo;
 import com.greencats.hackathon.model.CardRequest;
 import com.greencats.hackathon.model.CardResponse;
@@ -21,4 +22,6 @@ public interface CardsService {
     ResponseEntity<CardResponse> getCard(Long id);
 
     ResponseEntity<CountResponse> approveCard(Long id);
+
+    ResponseEntity<Void> adminApproveCard(Long id);
 }

@@ -67,4 +67,9 @@ public class CardsController implements CardsApi {
     public ResponseEntity<IdResponse> addUserToCleaning(CleaningRequest cleaningRequest) {
         return cleaningService.createCleaning(cleaningRequest);
     }
+
+    @Override
+    public ResponseEntity<Void> adminApproveCard(Long id) {
+        return cardsService.adminApproveCard(id);
+    }
 }

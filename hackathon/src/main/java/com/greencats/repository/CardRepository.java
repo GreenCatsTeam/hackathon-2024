@@ -20,4 +20,6 @@ public interface CardRepository {
     List<ShortCardInfo> getListCards(Integer limit, Integer offset);
 
     Integer approveCard(Long id);
+
+    void adminApproveCard(Long id);
 }

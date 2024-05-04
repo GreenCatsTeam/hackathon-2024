@@ -68,11 +68,11 @@ CREATE TABLE Cleaning
 
 -- Заполнение таблицы статусов
 INSERT INTO Status (status_name)
-VALUES ('moderating'),
-       ('created'),
-       ('in process'),
-       ('being reviewed'),
-       ('closed');
+VALUES ('модерация'),
+       ('создана'),
+       ('в процессе'),
+       ('на проверке'),
+       ('завершена');
 
 --changeset hackathon:2
 INSERT INTO District (district_name)

@@ -206,6 +206,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiErrorResponse'
+  /cards/admin/approve/{id}:
+    post:
+      parameters:
+        - name: id
+          in: path
+          description: ID карточки
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: integer
+            format: int64
+      operationId: adminApproveCard
+      tags:
+        - cards
+      summary: Апрувнуть карточку админом (пройти модерацию)
+      responses:
+        "200":
+          description: Карточка получена успешна
+        "400":
+          description: Некорректные параметры запроса
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        "404":
+          description: Карточка с указанным ID не найдена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
   /cards/approve/{id}:
     post:
       parameters:

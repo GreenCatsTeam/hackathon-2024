@@ -118,4 +118,9 @@ public class JdbcCardsService implements CardsService {
         countResponse.setCount(jdbcCardRepository.approveCard(id));
         return new ResponseEntity<>(countResponse, HttpStatus.OK);
     }
+
+    public ResponseEntity<Void> adminApproveCard(Long id) {
+        cardRepository.adminApproveCard(id);
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 }
