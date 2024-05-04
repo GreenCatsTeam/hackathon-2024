@@ -43,7 +43,7 @@ CREATE TABLE Card (
 
 CREATE TABLE MaxStatus(
     card_id INT REFERENCES Card(card_id),
-    max_status INT
+    max_status BIGINT
 );
 
 CREATE TABLE Cleaning (

@@ -53,9 +53,10 @@ public class JdbcUsersService implements UsersService {
             cardListInfo.setComplexity(cardInfo.complexity());
             cardListInfo.setLongitude(cardInfo.longitude());
             cardListInfo.setLatitude(cardInfo.latitude());
-            cardListInfo.setStatusId(cardInfo.statusId());
-            cardListInfo.setCityId(cardInfo.cityId());
-            cardListInfo.setDistrictId(cardInfo.districtId());
+            cardListInfo.setStatusId(cardInfo.maxStatus());
+            cardListInfo.setCityName(cardInfo.cityName());
+            cardListInfo.setDistrictName(cardInfo.districtName());
+            cardListInfos.add(cardListInfo);
         }
 
         return new ResponseEntity<>(cardListInfos, HttpStatus.OK);
