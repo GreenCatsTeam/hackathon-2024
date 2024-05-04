@@ -1,7 +1,10 @@
 package com.greencats.repository;
 
 import com.greencats.dto.authorization.AuthUserInfo;
+import com.greencats.dto.card.ShortCardInfo;
+import com.greencats.dto.security.UserCredentials;
 import com.greencats.dto.user.UserEditInfo;
+import java.util.List;
 import java.util.Optional;
 
 public interface UsersRepository {
@@ -10,5 +13,7 @@ public interface UsersRepository {
 
     Long usersIdPut(Long id, UserEditInfo userEditInfo);
 
-    Optional<AuthUserInfo> findByEmail(String username);
+    UserCredentials findByEmail(String username);
+
+    List<ShortCardInfo> getUserCardsList(Integer limit, Integer offset, Long id);
 }
