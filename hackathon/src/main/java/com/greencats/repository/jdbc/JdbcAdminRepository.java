@@ -1,13 +1,12 @@
 package com.greencats.repository.jdbc;
 
 import com.greencats.dto.admin.UserInfo;
-import com.greencats.exception.CardNotFoundException;
 import com.greencats.exception.UserNotFoundException;
 import com.greencats.repository.AdminRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
